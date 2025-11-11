@@ -46,7 +46,6 @@ public class LogCtrl implements Initializable {
             pressStart2PTexto = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 18);
             pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 90);
             
-            // Si la fuente no se carga, usar fallback
             if (pressStart2PTexto == null || pressStart2PTitulo == null) {
                 System.out.println("No se pudo cargar Press Start 2P, usando fallback");
                 pressStart2PTexto = Font.font("Consolas", 18);
@@ -58,9 +57,7 @@ public class LogCtrl implements Initializable {
             gcCanvasTitulo = canvasTitulo.getGraphicsContext2D();
             gcCanvasLineaNaranja = canvasLineaNaranja.getGraphicsContext2D();
 
-            // Configurar el botón CONNECT
             setupConnectButton();
-    
             drawInterface();
 
             
@@ -71,9 +68,10 @@ public class LogCtrl implements Initializable {
     }
 
     private void setupConnectButton() {
-        if (connectButton == null) return;
+        if (connectButton == null) 
+            return;
 
-        // Estilo inicial del botón
+        // boton sin presionar
         connectButton.setStyle(
             "-fx-background-color: #f5c264ff; " +
             "-fx-text-fill: white; " +
@@ -88,7 +86,7 @@ public class LogCtrl implements Initializable {
         connectButton.setPrefWidth(200);
         connectButton.setPrefHeight(45);
 
-        // Efectos hover
+        // hover
         connectButton.setOnMouseEntered(e -> {
             if (!connectButton.isDisabled()) {
                 connectButton.setStyle(
@@ -119,7 +117,7 @@ public class LogCtrl implements Initializable {
             }
         });
 
-        // Acción del botón
+        // evento
         connectButton.setOnAction(e -> handleConnect());
     }
 
@@ -133,22 +131,20 @@ public class LogCtrl implements Initializable {
             return;
         }
 
-        // Cambiar estado del botón durante la conexión
         setConnectingState();
 
-        // Simular conexión (en tu caso real, aquí iría la lógica de conexión al servidor)
+        // conexion simulador
         new Thread(() -> {
             try {
-                // Simular tiempo de conexión
-                Thread.sleep(2000);
                 
-                // Volver al estado normal en el hilo de JavaFX
+                Thread.sleep(2000); // tiempo conex
+                
                 Platform.runLater(() -> {
                     setConnectedState();
                     showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
                     
-                    // Aquí puedes navegar a la siguiente pantalla o iniciar el juego
-                    // mainApp.showGameScreen();
+                    // blablabla wait view
+                
                 });
                 
             } catch (InterruptedException ex) {
@@ -178,7 +174,7 @@ public class LogCtrl implements Initializable {
         connectButton.setText("CONECTADO!");
         connectButton.setDisable(false);
         connectButton.setStyle(
-            "-fx-background-color: #4CAF50; " +
+            "-fx-background-color: #c9a02fff; " +
             "-fx-text-fill: white; " +
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 14px; " +
