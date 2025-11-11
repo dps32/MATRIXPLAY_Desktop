@@ -1,7 +1,5 @@
 package com.client;
 
-import java.awt.Color;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,7 +18,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         try {
             final int windowWidth = 1200;
-            final int windowHeight = 700;
+            final int windowHeight = 650;
 
             UtilsViews.parentContainer.setStyle("-fx-font: 14 arial;");
             UtilsViews.addView(getClass(), "ViewLog", "/assets/logView.fxml");

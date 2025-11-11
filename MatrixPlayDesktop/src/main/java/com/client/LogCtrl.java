@@ -8,6 +8,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,14 +24,19 @@ public class LogCtrl implements Initializable {
     @FXML private Canvas canvasTitulo;
     @FXML private Canvas canvasLineaNaranja;
 
+    // interactivos
+    @FXML private TextField playerNameField;
+    @FXML private TextField urlField;
+    @FXML private Button connectButton;
 
     private GraphicsContext gcCanvasLog;
     private GraphicsContext gcCanvasTitulo;
     private GraphicsContext gcCanvasLineaNaranja;
-    
 
     private Font pressStart2PTitulo;
     private Font pressStart2PTexto;
+    private String playerName;
+    private String url;
 
 
     @Override
@@ -36,7 +44,7 @@ public class LogCtrl implements Initializable {
         try {
             // fuente
             pressStart2PTexto = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 18);
-            pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 30);
+            pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 90);
             
             // Si la fuente no se carga, usar fallback
             if (pressStart2PTexto == null || pressStart2PTitulo == null) {
@@ -50,11 +58,11 @@ public class LogCtrl implements Initializable {
             gcCanvasTitulo = canvasTitulo.getGraphicsContext2D();
             gcCanvasLineaNaranja = canvasLineaNaranja.getGraphicsContext2D();
 
-            
-            // Dibujar después de que JavaFX haya renderizado
-            Platform.runLater(() -> {
-                drawInterface();
-            });
+            // Configurar el botón CONNECT
+            setupConnectButton();
+    
+            drawInterface();
+
             
         } catch (Exception e) {
             System.out.println("Error en initialize: " + e.getMessage());
@@ -62,9 +70,148 @@ public class LogCtrl implements Initializable {
         }
     }
 
-    private void drawInterface() {
+    private void setupConnectButton() {
+        if (connectButton == null) return;
 
-        // medidas
+        // Estilo inicial del botón
+        connectButton.setStyle(
+            "-fx-background-color: #f5c264ff; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-family: 'Press Start 2P'; " +
+            "-fx-font-size: 14px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-radius: 5; " +
+            "-fx-border-radius: 5; " +
+            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);"
+        );
+        
+        connectButton.setPrefWidth(200);
+        connectButton.setPrefHeight(45);
+
+        // Efectos hover
+        connectButton.setOnMouseEntered(e -> {
+            if (!connectButton.isDisabled()) {
+                connectButton.setStyle(
+                    "-fx-background-color: #ecaa2dff; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-family: 'Press Start 2P'; " +
+                    "-fx-font-size: 14px; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-background-radius: 5; " +
+                    "-fx-border-radius: 5; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);"
+                );
+            }
+        });
+
+        connectButton.setOnMouseExited(e -> {
+            if (!connectButton.isDisabled()) {
+                connectButton.setStyle(
+                    "-fx-background-color: #f5c264ff;" +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-family: 'Press Start 2P'; " +
+                    "-fx-font-size: 14px; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-background-radius: 5; " +
+                    "-fx-border-radius: 5; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);"
+                );
+            }
+        });
+
+        // Acción del botón
+        connectButton.setOnAction(e -> handleConnect());
+    }
+
+    private void handleConnect() {
+        playerName = playerNameField.getText().trim();
+        url = urlField.getText().trim();
+
+        // Validar campos
+        if (playerName.isEmpty() || url.isEmpty()) {
+            showAlert("Error", "Por favor completa todos los campos");
+            return;
+        }
+
+        // Cambiar estado del botón durante la conexión
+        setConnectingState();
+
+        // Simular conexión (en tu caso real, aquí iría la lógica de conexión al servidor)
+        new Thread(() -> {
+            try {
+                // Simular tiempo de conexión
+                Thread.sleep(2000);
+                
+                // Volver al estado normal en el hilo de JavaFX
+                Platform.runLater(() -> {
+                    setConnectedState();
+                    showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
+                    
+                    // Aquí puedes navegar a la siguiente pantalla o iniciar el juego
+                    // mainApp.showGameScreen();
+                });
+                
+            } catch (InterruptedException ex) {
+                Platform.runLater(() -> {
+                    setErrorState();
+                    showAlert("Error de Conexión", "No se pudo conectar al servidor");
+                });
+            }
+        }).start();
+    }
+
+    private void setConnectingState() {
+        connectButton.setText("CONECTANDO...");
+        connectButton.setDisable(true);
+        connectButton.setStyle(
+            "-fx-background-color: #FF9800; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-family: 'Press Start 2P'; " +
+            "-fx-font-size: 12px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-radius: 5; " +
+            "-fx-border-radius: 5;"
+        );
+    }
+
+    private void setConnectedState() {
+        connectButton.setText("CONECTADO!");
+        connectButton.setDisable(false);
+        connectButton.setStyle(
+            "-fx-background-color: #4CAF50; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-family: 'Press Start 2P'; " +
+            "-fx-font-size: 14px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-radius: 5; " +
+            "-fx-border-radius: 5;"
+        );
+    }
+
+    private void setErrorState() {
+        connectButton.setText("CONNECT");
+        connectButton.setDisable(false);
+        connectButton.setStyle(
+            "-fx-background-color: #F44336; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-family: 'Press Start 2P'; " +
+            "-fx-font-size: 14px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-radius: 5; " +
+            "-fx-border-radius: 5;"
+        );
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void drawInterface() {
+        // medidas ---------------------------------------------------------
         double widthLog = canvasLog.getWidth();
         double heightLog = canvasLog.getHeight();
         
@@ -74,7 +221,7 @@ public class LogCtrl implements Initializable {
         double widthLine = canvasLineaNaranja.getWidth();
         double heightLine = canvasLineaNaranja.getHeight();
 
-        // Limpiar canvas
+        // Limpiar canvas 
         gcCanvasLog.clearRect(0, 0, widthLog, heightLog);
         gcCanvasTitulo.clearRect(0, 0, widthTitle, heightTitle);
         gcCanvasLineaNaranja.clearRect(0, 0, widthLine, heightLine);
@@ -86,59 +233,44 @@ public class LogCtrl implements Initializable {
         gcCanvasTitulo.setFill(Color.BLACK);
         gcCanvasTitulo.fillRect(0, 0, widthTitle, heightTitle);
 
-        gcCanvasLineaNaranja.setFill(Color.BLACK);
+        gcCanvasLineaNaranja.setFill(Color.DARKORANGE);
         gcCanvasLineaNaranja.fillRect(0, 0, widthLine, heightLine);
         
-
-        // Configurar la fuente Press Start 2P TITULO
-        gcCanvasLog.setFont(pressStart2PTitulo);
-        gcCanvasLog.setFill(Color.ORANGE);
-        gcCanvasLog.setStroke(Color.ORANGE);
-        gcCanvasLog.setLineWidth(1);
-        
-        // Configurar la fuente Press Start 2P TEXTO
-        gcCanvasLog.setFont(pressStart2PTexto);
-        gcCanvasLog.setFill(Color.ORANGE);
-        gcCanvasLog.setStroke(Color.ORANGE);
-        gcCanvasLog.setLineWidth(1);
-
-
-        
-        // Calcular posición centrada
+        // tamaño letra 
+        fontSize(gcCanvasTitulo,"Title");
+        fontSize(gcCanvasLog,"Text");
+    
+        // posicion centrada
         double centerX = widthLog / 2;
         double startY = widthLog / 3;
         
-        // PLAYER NAME:
-        gcCanvasLog.fillText("PLAYER NAME:", centerX - 200, startY);
-        
-        // Línea para el campo de texto (más larga como en la imagen)
+        // TITULO 
+        gcCanvasTitulo.fillText("P O N G ☆", (centerX / 2) - 170,  startY / 2);
+
+        // PLAYER NAME + campo input
+        gcCanvasLog.fillText("PLAYER NAME:", centerX - 420, startY - 250);
         gcCanvasLog.setStroke(Color.ORANGE);
-        gcCanvasLog.setLineWidth(2);
-        gcCanvasLog.strokeLine(centerX - 200, startY + 30, centerX + 200, startY + 30);
+        gcCanvasLog.setLineWidth(32);
         
-        // URL:
-        gcCanvasLog.fillText("URL:", centerX - 200, startY + 100);
+        gcCanvasLog.strokeLine(centerX - 170, startY - 260, centerX + 220, startY - 260);
         
-        // Línea para URL (más larga)
-        gcCanvasLog.strokeLine(centerX - 200, startY + 130, centerX + 200, startY + 130);
-        
-        // Botón CONNECT - estilo arcade
-        double buttonX = centerX - 75;
-        double buttonY = startY + 180;
-        double buttonWidth = 150;
-        double buttonHeight = 40;
-        
-        // Fondo del botón
-        gcCanvasLog.setFill(Color.BLACK);
-        gcCanvasLog.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-        
-        // Borde del botón
-        gcCanvasLog.setStroke(Color.GREEN);
-        gcCanvasLog.setLineWidth(3);
-        gcCanvasLog.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
-        
-        // Texto del botón centrado
-        gcCanvasLog.setFill(Color.GREEN);
-        gcCanvasLog.fillText("CONNECT", centerX - 70, buttonY + 25);
+        // URL + campo input
+        gcCanvasLog.fillText("URL:", centerX - 274, startY - 175);
+        gcCanvasLog.strokeLine(centerX - 170, startY - 185, centerX + 220, startY - 185);
+
+    }
+
+    private void fontSize(GraphicsContext g2Context, String type){
+        if(type.equals("Title")){
+            g2Context.setFont(pressStart2PTitulo);
+            g2Context.setFill(Color.DARKORANGE);
+            g2Context.setStroke(Color.DARKORANGE);
+            g2Context.setLineWidth(1);
+        } else if (type.equals("Text")){
+            g2Context.setFont(pressStart2PTexto);
+            g2Context.setFill(Color.ORANGE);
+            g2Context.setStroke(Color.ORANGE);
+            g2Context.setLineWidth(1);
+        }
     }
 }
