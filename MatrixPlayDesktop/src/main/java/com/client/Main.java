@@ -98,6 +98,8 @@ public class Main extends Application {
 
     private static void wsMessage(String response) {
         // blablalbalbal
+
+        // URL: wss://matrixplay1.ieti.site:443
     }
       
 }

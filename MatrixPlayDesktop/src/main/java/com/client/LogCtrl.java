@@ -283,3 +283,7 @@ public class LogCtrl implements Initializable {
         return playerName;
     }
 }
+
+
+
+// Revisar AlertDialogue para conexion (dice que ha conectado sin haber conectado >:( ))
