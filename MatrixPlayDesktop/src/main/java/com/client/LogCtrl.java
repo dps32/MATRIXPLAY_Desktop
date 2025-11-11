@@ -35,8 +35,10 @@ public class LogCtrl implements Initializable {
 
     private Font pressStart2PTitulo;
     private Font pressStart2PTexto;
-    private String playerName;
-    private String url;
+    public static String playerName;
+    public static String url;
+
+    public static UtilsWS wsClient;
 
 
     @Override
@@ -125,7 +127,6 @@ public class LogCtrl implements Initializable {
         playerName = playerNameField.getText().trim();
         url = urlField.getText().trim();
 
-        // Validar campos
         if (playerName.isEmpty() || url.isEmpty()) {
             showAlert("Error", "Por favor completa todos los campos");
             return;
@@ -141,9 +142,10 @@ public class LogCtrl implements Initializable {
                 
                 Platform.runLater(() -> {
                     setConnectedState();
+                    Main.connectToServer();
                     showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
+                    UtilsViews.setViewAnimating("ViewWait");
                     
-                    // blablabla wait view
                 
                 });
                 
@@ -174,7 +176,7 @@ public class LogCtrl implements Initializable {
         connectButton.setText("CONECTADO!");
         connectButton.setDisable(false);
         connectButton.setStyle(
-            "-fx-background-color: #c9a02fff; " +
+            "-fx-background-color: #e6ce8fff; " +
             "-fx-text-fill: white; " +
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 14px; " +
@@ -262,11 +264,22 @@ public class LogCtrl implements Initializable {
             g2Context.setFill(Color.DARKORANGE);
             g2Context.setStroke(Color.DARKORANGE);
             g2Context.setLineWidth(1);
+
         } else if (type.equals("Text")){
             g2Context.setFont(pressStart2PTexto);
             g2Context.setFill(Color.ORANGE);
             g2Context.setStroke(Color.ORANGE);
             g2Context.setLineWidth(1);
         }
+    }
+
+    // getters
+
+    public String getUrl(){
+        return url;
+    }
+
+    public String getUserName(){
+        return playerName;
     }
 }
