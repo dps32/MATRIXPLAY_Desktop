@@ -1,7 +1,10 @@
 package com.client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.shared.ClientData;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -59,6 +62,7 @@ public class LogCtrl implements Initializable {
             gcCanvasTitulo = canvasTitulo.getGraphicsContext2D();
             gcCanvasLineaNaranja = canvasLineaNaranja.getGraphicsContext2D();
 
+            loadSavedConfig(); //json
             setupConnectButton();
             drawInterface();
 
@@ -123,6 +127,23 @@ public class LogCtrl implements Initializable {
         connectButton.setOnAction(e -> handleConnect());
     }
 
+     private void loadSavedConfig() {
+        try {
+            ClientData savedConfig = Config.loadConfig();
+            if (savedConfig != null) {
+                playerNameField.setText(savedConfig.name);
+                urlField.setText(savedConfig.serverAddress);
+                
+                System.out.println("Configuracion cargada: " + savedConfig.name + " - " + savedConfig.serverAddress);
+            } else {
+                System.out.println("No hay configuración guardada en: " + Config.getConfigPath());
+            }
+        } catch (IOException e) {
+            System.out.println("Error cargando configuración: " + e.getMessage()); // No mostrar error al usuario si es la primera vez
+
+        }
+    }
+
     private void handleConnect() {
         playerName = playerNameField.getText().trim();
         url = urlField.getText().trim();
@@ -130,6 +151,16 @@ public class LogCtrl implements Initializable {
         if (playerName.isEmpty() || url.isEmpty()) {
             showAlert("Error", "Por favor completa todos los campos");
             return;
+        }
+
+        // datos json conexion
+        try {
+            ClientData configToSave = new ClientData(playerName, url);
+            Config.saveConfig(configToSave);
+            System.out.println("Configuración guardada exitosamente");
+        } catch (IOException e) {
+            System.out.println("Error guardando configuración: " + e.getMessage());
+            //showAlert("Advertencia", "No se pudo guardar la configuración, pero se intentará conectar.");
         }
 
         setConnectingState();
@@ -287,3 +318,5 @@ public class LogCtrl implements Initializable {
 
 
 // Revisar AlertDialogue para conexion (dice que ha conectado sin haber conectado >:( ))
+
+// revisa url 

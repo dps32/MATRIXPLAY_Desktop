@@ -7,17 +7,37 @@ import org.json.JSONObject;
 import com.shared.ClientData;
 
 public class Config {
-    private static final String CONFIG_PATH = System.getProperty("user.dir") + "/data/clientConfig.json";
-    private static ClientData clientData; // ????????????
+    // Ruta específica que solicitas
+    private static final String CONFIG_PATH = "/home/super/Documents/GitHub/MATRIXPLAY_Desktop/MatrixPlayDesktop/data/clientConfig.json";
+    private static ClientData clientData;
 
     public static void saveConfig(ClientData data) throws IOException {
         String jsonString = data.toJSON().toString(2); 
-        Files.write(Paths.get(CONFIG_PATH), jsonString.getBytes());
+        
+        // Asegurarse de que el directorio existe
+        Path path = Paths.get(CONFIG_PATH);
+        Files.createDirectories(path.getParent());
+        
+        Files.write(path, jsonString.getBytes());
+        System.out.println("Configuración guardada en: " + CONFIG_PATH);
     }
     
     public static ClientData loadConfig() throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get(CONFIG_PATH)));
+        Path configPath = Paths.get(CONFIG_PATH);
+        
+        if (!Files.exists(configPath)) {
+            System.out.println("Archivo de configuración no encontrado en: " + CONFIG_PATH);
+            return null;
+        }
+        
+        String content = new String(Files.readAllBytes(configPath));
         JSONObject json = new JSONObject(content);
+        System.out.println("Configuración cargada desde: " + CONFIG_PATH);
         return ClientData.fromJSON(json);
+    }
+    
+    // getter
+    public static String getConfigPath() {
+        return CONFIG_PATH;
     }
 }
