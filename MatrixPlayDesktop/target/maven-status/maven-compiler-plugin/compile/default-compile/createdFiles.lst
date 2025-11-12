@@ -1,4 +1,5 @@
 com/client/Main.class
+com/client/GameCtrl.class
 com/client/CountdCtrl.class
 com/client/UtilsWS$1.class
 com/client/UtilsWS.class

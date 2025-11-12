@@ -1,4 +1,3 @@
-
 package com.client;
 
 import java.net.URL;
@@ -8,17 +7,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class CountdCtrl implements Initializable{
+public class GameCtrl implements Initializable {
 
-    @FXML public Label countdownNumber;
+    @FXML Label labelGame;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        countdownNumber.setText("3"); // ARREGLAR COUNTDOWN 
+        labelGame.setText("GAME START :)");
     }
-
-    public void setCountdownValue(String value) {
-        countdownNumber.setText(value);
-    }
-
+    
 }

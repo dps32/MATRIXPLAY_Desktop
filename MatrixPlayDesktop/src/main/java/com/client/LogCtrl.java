@@ -165,17 +165,16 @@ public class LogCtrl implements Initializable {
 
         setConnectingState();
 
-        // conexion simulador
         new Thread(() -> {
             try {
                 
-                Thread.sleep(2000); // tiempo conex
+                Thread.sleep(3000); // tiempo conex
                 
                 Platform.runLater(() -> {
                     setConnectedState();
                     Main.connectToServer();
-                    showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
-                    UtilsViews.setViewAnimating("ViewWait");
+                    //showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
+                    UtilsViews.setViewAnimating("ViewCountD");// mira aqui
                     
                 
                 });
@@ -183,7 +182,7 @@ public class LogCtrl implements Initializable {
             } catch (InterruptedException ex) {
                 Platform.runLater(() -> {
                     setErrorState();
-                    showAlert("Error de Conexión", "No se pudo conectar al servidor");
+                    //showAlert("Error de Conexión", "No se pudo conectar al servidor");
                 });
             }
         }).start();
@@ -318,5 +317,3 @@ public class LogCtrl implements Initializable {
 
 
 // Revisar AlertDialogue para conexion (dice que ha conectado sin haber conectado >:( ))
-
-// revisa url 
