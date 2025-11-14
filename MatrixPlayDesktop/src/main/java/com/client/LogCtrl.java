@@ -62,7 +62,7 @@ public class LogCtrl implements Initializable {
             gcCanvasTitulo = canvasTitulo.getGraphicsContext2D();
             gcCanvasLineaNaranja = canvasLineaNaranja.getGraphicsContext2D();
 
-            loadSavedConfig(); //json
+            loadSavedConfig(); //json config
             setupConnectButton();
             drawInterface();
 
@@ -139,11 +139,11 @@ public class LogCtrl implements Initializable {
                 System.out.println("No hay configuración guardada en: " + Config.getConfigPath());
             }
         } catch (IOException e) {
-            System.out.println("Error cargando configuración: " + e.getMessage()); // No mostrar error al usuario si es la primera vez
+            System.out.println("Error cargando configuración: " + e.getMessage()); 
 
         }
     }
-
+    
     private void handleConnect() {
         playerName = playerNameField.getText().trim();
         url = urlField.getText().trim();
@@ -160,7 +160,6 @@ public class LogCtrl implements Initializable {
             System.out.println("Configuración guardada exitosamente");
         } catch (IOException e) {
             System.out.println("Error guardando configuración: " + e.getMessage());
-            //showAlert("Advertencia", "No se pudo guardar la configuración, pero se intentará conectar.");
         }
 
         setConnectingState();
@@ -173,8 +172,8 @@ public class LogCtrl implements Initializable {
                 Platform.runLater(() -> {
                     setConnectedState();
                     Main.connectToServer();
-                    //showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
-                    UtilsViews.setViewAnimating("ViewCountD");// mira aqui
+                    showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
+                    UtilsViews.setViewAnimating("ViewGame");// ViewWait mira aqui
                     
                 
                 });
@@ -182,12 +181,13 @@ public class LogCtrl implements Initializable {
             } catch (InterruptedException ex) {
                 Platform.runLater(() -> {
                     setErrorState();
-                    //showAlert("Error de Conexión", "No se pudo conectar al servidor");
+                    showAlert("Error de Conexión", "No se pudo conectar al servidor");
                 });
             }
         }).start();
     }
 
+    
     private void setConnectingState() {
         connectButton.setText("CONECTANDO...");
         connectButton.setDisable(true);
@@ -230,7 +230,7 @@ public class LogCtrl implements Initializable {
         );
     }
 
-    private void showAlert(String title, String message) {
+    public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);

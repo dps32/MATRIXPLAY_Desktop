@@ -98,6 +98,8 @@ public class Main extends Application {
                 }); 
             });
             
+
+
             // info usuario
             pauseDuring(2000, () -> {
                 if (wsClient != null && wsClient.isOpen()) {
@@ -121,8 +123,6 @@ public class Main extends Application {
                     //String message = msgObj.getString("message");
                     //String origin = msgObj.getString("origin");
                     //String destination = msgObj.getString("destination");
-
-                    //ctrlSockets.invitationMessages(origin, destination, message); 
                     break;
                 }
             

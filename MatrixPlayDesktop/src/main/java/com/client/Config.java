@@ -8,13 +8,12 @@ import com.shared.ClientData;
 
 public class Config {
 
-    private static final String CONFIG_PATH = "/home/super/Documents/GitHub/MATRIXPLAY_Desktop/MatrixPlayDesktop/data/clientConfig.json"; // aqui fallaba
+    private static final String CONFIG_PATH = System.getProperty("user.dir") + "/data/clientConfig.json"; 
     private static ClientData clientData;
 
     public static void saveConfig(ClientData data) throws IOException {
         String jsonString = data.toJSON().toString(2); 
         
-
         Path path = Paths.get(CONFIG_PATH);
         Files.createDirectories(path.getParent());
         
