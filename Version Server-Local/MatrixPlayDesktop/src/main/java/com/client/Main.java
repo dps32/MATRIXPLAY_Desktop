@@ -1,10 +1,13 @@
 package com.client;
 
+import java.lang.reflect.Field;
+
 import org.json.JSONObject;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -58,7 +61,6 @@ public class Main extends Application {
             stage.setMinWidth(windowWidth);
             stage.setMinHeight(windowHeight);
             
-            // Add icon (fixed path)
             try {
                 Image icon = new Image(getClass().getResourceAsStream("/icons/icon.png"));
                 stage.getIcons().add(icon);
@@ -74,44 +76,103 @@ public class Main extends Application {
         }
     }
 
-      @Override
-        public void stop() { 
+    @Override
+    public void stop() { 
             if (wsClient != null) {
                 wsClient.forceExit();
             }
-            System.exit(1); // kill executors
         }
         
-        public static void pauseDuring(long milliseconds, Runnable action) {
+    public static void pauseDuring(long milliseconds, Runnable action) {
             PauseTransition pause = new PauseTransition(Duration.millis(milliseconds));
             pause.setOnFinished(event -> Platform.runLater(action));
             pause.play();
         }
 
-        public static void connectToServer(){
-            pauseDuring(1500, () -> {
-            wsClient = UtilsWS.getSharedInstance(protocol + "://"+ logCtrl.getUrl() + ":" + port)  ; // url para conectar 
-
-            wsClient.onMessage((response) -> { 
-                Platform.runLater(() -> { 
-                    wsMessage(response); 
-                }); 
-            });
-            
-
-
-            // info usuario
-            pauseDuring(2000, () -> {
-                if (wsClient != null && wsClient.isOpen()) {
-                    JSONObject userInfo = new JSONObject();
-                    userInfo.put("type", "userInfo");
-                    userInfo.put("userName", logCtrl.getUserName().trim()); // nombre registrado 
-                    wsClient.safeSend(userInfo.toString());
-                    System.out.println("Enviando nombre de usuario: " + logCtrl.getUserName().trim());
-                } 
-            });
+    public static void connectToServer() {
+        Platform.runLater(() -> {
+            logCtrl.setConnectingState();
         });
-    }    
+        
+
+        resetWebSocket();
+
+        pauseDuring(1000, () -> {
+            try {
+                String url = protocol + "://"+ logCtrl.getUrl() + ":" + port;
+                wsClient = createNewWebSocketInstance(url);
+            
+                wsClient.onMessage((response) -> { 
+                    Platform.runLater(() -> { 
+                        wsMessage(response); 
+                    }); 
+                });
+
+                wsClient.onError((response) -> {  
+                    Platform.runLater(() -> { 
+                        System.out.println("Error de WebSocket: " + response);
+                        setErrorState();
+                        showAlert("Error de Conexión", "No se pudo conectar al servidor");
+                        UtilsViews.setView("ViewLog");
+                    }); 
+                });
+
+                wsClient.onOpen((response) -> {
+                    Platform.runLater(() -> {
+                        System.out.println("Conexión WebSocket abierta");
+                        setConnectedState();
+                        JSONObject userInfo = new JSONObject();
+                        userInfo.put("type", "userInfo");
+                        userInfo.put("userName", logCtrl.getUserName().trim());
+                        wsClient.safeSend(userInfo.toString());
+                        UtilsViews.setViewAnimating("ViewWait");
+                        showAlert("Conexión Exitosa", "Conectado como: " + logCtrl.getUserName());
+                    });
+                });
+
+                wsClient.onClose((response) -> {
+                    Platform.runLater(() -> {
+                        System.out.println("Conexión cerrada: " + response);
+                        setErrorState();        
+                    });
+                });
+
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    System.out.println("Excepción: " + e.getMessage());
+                    setErrorState();
+                    showAlert("Error de Conexión", "Error: " + e.getMessage());
+                    UtilsViews.setView("ViewLog");
+                });
+            }
+        });
+    }
+
+    private static UtilsWS createNewWebSocketInstance(String url) { // nuevo intento de conex = nuevo ws
+        try {
+            Field field = UtilsWS.class.getDeclaredField("sharedInstance");
+            field.setAccessible(true);
+            field.set(null, null);
+        } catch (Exception e) {
+            System.out.println("No se pudo resetear singleton: " + e.getMessage());
+        }
+        
+        return UtilsWS.getSharedInstance(url);
+    }
+
+
+    public static void resetWebSocket() {
+        try {
+            if (wsClient != null) {
+                wsClient.forceExit();
+                Thread.sleep(100);
+                wsClient = null;
+            }
+        } catch (Exception e) {
+            System.out.println("Error en reset: " + e.getMessage());
+        }
+    }
+
 
     private static void wsMessage(String response) {
         Platform.runLater(()->{ 
@@ -160,11 +221,31 @@ public class Main extends Application {
                     });
                     break;
                     }
-
-
             }
-            
         });
     }
+
+    private static void setConnectedState() {
+    if (logCtrl != null) {
+        logCtrl.setConnectedState();
+    }
+    }
+
+    private static void setErrorState() {
+        if (logCtrl != null) {
+            logCtrl.setErrorState();
+        }
+    }
+
+    public static void showAlert(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.show();
+        });
+    }
+
       
 }

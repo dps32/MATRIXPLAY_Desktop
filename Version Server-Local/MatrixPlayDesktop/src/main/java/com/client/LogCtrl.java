@@ -5,14 +5,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.shared.ClientData;
-
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -26,6 +25,8 @@ public class LogCtrl implements Initializable {
     @FXML private Canvas canvasLog;
     @FXML private Canvas canvasTitulo;
     @FXML private Canvas canvasLineaNaranja;
+
+    @FXML public static Label errorLabel;
 
     // interactivos
     @FXML private TextField playerNameField;
@@ -153,7 +154,7 @@ public class LogCtrl implements Initializable {
             return;
         }
 
-        // datos json conexion
+        // data json
         try {
             ClientData configToSave = new ClientData(playerName, url);
             Config.saveConfig(configToSave);
@@ -163,32 +164,11 @@ public class LogCtrl implements Initializable {
         }
 
         setConnectingState();
-
-        new Thread(() -> {
-            try {
-                
-                Thread.sleep(3000); // tiempo conex
-                
-                Platform.runLater(() -> {
-                    setConnectedState();
-                    Main.connectToServer();
-                    showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
-                    UtilsViews.setViewAnimating("ViewGame");// ViewWait mira aqui
-                    
-                
-                });
-                
-            } catch (InterruptedException ex) {
-                Platform.runLater(() -> {
-                    setErrorState();
-                    showAlert("Error de Conexión", "No se pudo conectar al servidor");
-                });
-            }
-        }).start();
+        Main.connectToServer();
     }
 
     
-    private void setConnectingState() {
+    public void setConnectingState() {
         connectButton.setText("CONECTANDO...");
         connectButton.setDisable(true);
         connectButton.setStyle(
@@ -202,11 +182,11 @@ public class LogCtrl implements Initializable {
         );
     }
 
-    private void setConnectedState() {
+    public void setConnectedState() {
         connectButton.setText("CONECTADO!");
         connectButton.setDisable(false);
         connectButton.setStyle(
-            "-fx-background-color: #e6ce8fff; " +
+            "-fx-background-color: #cae75fff; " +
             "-fx-text-fill: white; " +
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 14px; " +
@@ -216,7 +196,7 @@ public class LogCtrl implements Initializable {
         );
     }
 
-    private void setErrorState() {
+    public void setErrorState() {
         connectButton.setText("CONNECT");
         connectButton.setDisable(false);
         connectButton.setStyle(
