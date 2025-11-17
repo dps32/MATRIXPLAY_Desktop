@@ -7,13 +7,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 public class UtilsWS {
-
     private static UtilsWS sharedInstance = null;
     private WebSocketClient client;
     private Consumer<String> onOpenCallBack = null;
@@ -89,9 +87,7 @@ public class UtilsWS {
         if (exitRequested.get()) {
             return;
         }
-
         System.out.println("WS reconnecting to: " + this.location);
-
         if (client != null) {
             client.close();
         }

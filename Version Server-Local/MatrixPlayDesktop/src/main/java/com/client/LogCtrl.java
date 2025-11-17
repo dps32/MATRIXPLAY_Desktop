@@ -284,7 +284,6 @@ public class LogCtrl implements Initializable {
     }
 
     // getters
-
     public String getUrl(){
         return url;
     }
@@ -295,5 +294,3 @@ public class LogCtrl implements Initializable {
 }
 
 
-
-// Revisar AlertDialogue para conexion (dice que ha conectado sin haber conectado >:( ))
