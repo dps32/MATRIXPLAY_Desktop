@@ -194,29 +194,21 @@ public class Main extends Application {
                 case "countdown" -> {
                     int countdownValue = msgObj.optInt("value", 0);
                     activeView = UtilsViews.getActiveView();
-
+                    
                     Platform.runLater(() -> {
-                        if (activeView == null) activeView = "";
+                        if (activeView == null) 
+                            activeView = "";
+
                         if (!"ViewCountD".equals(activeView)) {
                             UtilsViews.setView("ViewCountD");
                         }
-                        String txt = (countdownValue == 0) ? "GO!" : String.valueOf(countdownValue);
-                        ctrlCount.setCountdownValue(txt);
-                        if (countdownValue == 0) {
-                            new Thread(() -> {
-                                try {
-                                    Thread.sleep(1000);
-                                    Platform.runLater(() -> {
-                                        UtilsViews.setViewAnimating("ViewGame");
-                                        Stage stage = UtilsViews.getStage();
-                                        stage.setWidth(1400);
-                                        stage.setHeight(900);
-                                        stage.centerOnScreen();
-                                    });
-                                } catch (InterruptedException e) {
-                                    Thread.currentThread().interrupt();
-                                }
-                            }).start();
+
+                        if (ctrlCount != null) {
+                            if (countdownValue > 0) {
+                                ctrlCount.setCountdownValue(String.valueOf(countdownValue));
+                            } else {
+                                ctrlCount.startCountdown();
+                            }
                         }
                     });
                     break;
