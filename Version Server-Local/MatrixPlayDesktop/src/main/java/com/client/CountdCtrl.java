@@ -2,9 +2,12 @@ package com.client;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class CountdCtrl implements Initializable {
 
@@ -39,7 +42,7 @@ public class CountdCtrl implements Initializable {
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);
-                    javafx.application.Platform.runLater(() -> {
+                    Platform.runLater(() -> {
                         startCountdownAnimation(count - 1);
                     });
                 } catch (InterruptedException e) {
@@ -54,11 +57,11 @@ public class CountdCtrl implements Initializable {
             new Thread(() -> {
                 try {
                     Thread.sleep(1000); // go por 1 segundo
-                    javafx.application.Platform.runLater(() -> {
+                    Platform.runLater(() -> {
                         UtilsViews.setViewAnimating("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {
-                            stage.setWidth(1400);
+                            stage.setWidth(1400); //verif tamaño
                             stage.setHeight(900);
                             stage.centerOnScreen();
                         }
