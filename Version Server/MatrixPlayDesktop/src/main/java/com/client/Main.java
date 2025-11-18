@@ -110,7 +110,7 @@ public class Main extends Application {
                     });
                 });
 
-                wsClient.onOpen((response) -> {
+                wsClient.onOpen((response) -> { // envia data a server 
                     Platform.runLater(() -> {
                         System.out.println("Conexión WebSocket abierta");
                         setConnectedState();
@@ -172,7 +172,7 @@ public class Main extends Application {
         }
     }
 
-    private static void wsMessage(String response) {
+    private static void wsMessage(String response) { // respuesta server
         Platform.runLater(()->{
             JSONObject msgObj = new JSONObject(response);
             String type = msgObj.optString("type","");

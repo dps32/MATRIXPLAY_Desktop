@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.GameCtrl">
+<AnchorPane fx:id="rootPane" prefHeight="700.0" prefWidth="1200.0" 
+            xmlns="http://javafx.com/javafx/22.0.1" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.client.GameCtrl">
+   
    <children>
-      <Canvas fx:id="canvaPartida" height="640.0" layoutX="-3.0" width="640.0" />
-      <Text layoutX="281.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRUEBAAA" wrappingWidth="95.0530014038086" />
+      <Canvas fx:id="canvaPartida" height="700.0" width="1200.0" />
    </children>
 </AnchorPane>
