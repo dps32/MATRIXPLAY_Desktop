@@ -17,6 +17,8 @@ public class Main extends Application {
     public static String protocol = "wss";
     public static String port = "443";
     public static String activeView;
+
+    public static String namePlayerMobile;
     public static String namePlayerDesktop;
     public static int idPlayerDesktop;
 
