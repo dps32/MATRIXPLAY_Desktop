@@ -158,6 +158,9 @@ public class LogCtrl implements Initializable {
         try {
             ClientData configToSave = new ClientData(playerName, url);
             Config.saveConfig(configToSave);
+
+            Main.namePlayerDesktop = playerName; //name
+
             System.out.println("Configuración guardada exitosamente");
         } catch (IOException e) {
             System.out.println("Error guardando configuración: " + e.getMessage());

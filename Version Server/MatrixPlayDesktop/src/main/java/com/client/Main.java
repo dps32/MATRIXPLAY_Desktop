@@ -13,14 +13,19 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
+
     public static String protocol = "wss";
     public static String port = "443";
     public static String activeView;
+    public static String namePlayerDesktop;
+    public static int idPlayerDesktop;
+
     public static LogCtrl logCtrl;
     public static CtrlWait waitCtrl;
     public static CountdCtrl ctrlCount;
     public static GameCtrl gameCtrl;
     public static UtilsWS wsClient;
+
 
     public static void main(String[] args) {
         // Iniciar app JavaFX
@@ -117,6 +122,7 @@ public class Main extends Application {
 
                         JSONObject confirmation = new JSONObject();
                         confirmation.put("type", "clientConfirmation");
+                        confirmation.put("name", namePlayerDesktop);
                         wsClient.safeSend(confirmation.toString());
 
                         UtilsViews.setViewAnimating("ViewCountD"); // viewWait
@@ -170,12 +176,15 @@ public class Main extends Application {
         Platform.runLater(()->{
             JSONObject msgObj = new JSONObject(response);
             String type = msgObj.optString("type","");
-            //System.out.println("RESPUESTAAA" + response);
+
+            System.out.println("TYPEEEE" + type);
+            System.out.println("RESPUESTAAA" + response);
 
             switch (type) {
 
                 case "welcome" -> { 
-                    String message = msgObj.optString("welcome" , "Hola"); System.out.println(message); 
+                    String message = msgObj.optString("welcome" , ""); 
+                    System.out.println(message); 
                 }
                 
                 case "playerAssigned" -> {
@@ -184,7 +193,14 @@ public class Main extends Application {
                         gameCtrl.setPlayerId(playerId);
                     }
                     System.out.println("Jugador ID: " + playerId);
+                    idPlayerDesktop = playerId;
                 }
+
+                case "playerNames" -> {
+                    // bla bla bla pal waiting 
+                    break;
+                }
+
                 case "waiting" -> {
                     //String message = msgObj.getString("message");
                     //String origin = msgObj.getString("origin");
@@ -219,13 +235,7 @@ public class Main extends Application {
                         gameCtrl.updateGameState(msgObj);
                     }
                     break;
-            }
-
-            case "paddleMove" -> {
-                // El servidor ya envía el gameState completo
-                break;
-            }
-
+                }
             }
           
         });          
