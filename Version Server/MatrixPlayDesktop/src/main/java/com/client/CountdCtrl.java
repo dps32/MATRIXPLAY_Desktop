@@ -61,8 +61,8 @@ public class CountdCtrl implements Initializable {
                         UtilsViews.setViewAnimating("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {
-                            stage.setWidth(1400); //verif tamaño
-                            stage.setHeight(900);
+                            stage.setWidth(1200); //verif tamaño
+                            stage.setHeight(700);
                             stage.centerOnScreen();
                         }
                         countdownInProgress = false;
