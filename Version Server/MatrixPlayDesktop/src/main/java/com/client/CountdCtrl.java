@@ -38,7 +38,6 @@ public class CountdCtrl implements Initializable {
         if (count > 0) {
             setCountdownValue(String.valueOf(count));
             
-            // 1 seg de espera
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);
@@ -51,20 +50,24 @@ public class CountdCtrl implements Initializable {
                 }
             }).start();
         } else {
-    
             setCountdownValue("GO!");
             
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000); // go por 1 segundo
+                    Thread.sleep(1000); // 1 seg para go
                     Platform.runLater(() -> {
                         UtilsViews.setViewAnimating("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {
-                            stage.setWidth(1200); //verif tamaño
+                            stage.setWidth(1200);
                             stage.setHeight(700);
                             stage.centerOnScreen();
                         }
+                        
+                        if (Main.gameCtrl != null) {
+                            Main.gameCtrl.startGame();
+                        }
+                        
                         countdownInProgress = false;
                     });
                 } catch (InterruptedException e) {

@@ -25,48 +25,93 @@ public class GameCtrl implements Initializable {
 
     private GraphicsContext gcGame;
     
-    // dimensiones de las palas
     private final double paddleWidth = 20;
     private final double paddleHeight = 150;
     private final double paddleMargin = 15;
 
-    // posiciones de las palas (0-1 como viene del servidor)
     private double leftPaddlePosition = 0.5;
     private double rightPaddlePosition = 0.5;
 
-     // dimensiones de la pelota
     private final double ballRadius = 15;
-
-    // posicion de la pelota 0-1 como viene del servidor
     private double ballX = 0.5;
     private double ballY = 0.5;
 
-
-    // estado del juego - mov teclas
-    private boolean isGameRunning = false;
     private AnimationTimer gameLoop;
 
     private boolean wPressed = false;
     private boolean sPressed = false;
+    private boolean upPressed = false;
+    private boolean downPressed = false;
 
-
-    // teclas moviendose bool
+    // REDUCIDO: Velocidad más lenta para mejor control
+    private final double paddleSpeed = 0.005;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         gcGame = canvaPartida.getGraphicsContext2D();
-
-        drawGame();
-
         
+        // Configurar el foco para que capture eventos de teclado
+        setupFocus();
+        
+        drawGame();
+        setupGameLoop();
+        
+        System.out.println("GameCtrl inicializado - Listo para recibir teclas");
     }
 
+    private void setupFocus() {
+        // Hacer que el AnchorPane pueda recibir foco
+        rootPane.setFocusTraversable(true);
+        
+        // Solicitar foco inicial para el AnchorPane
+        rootPane.requestFocus();
+        
+        // Cuando se haga clic en cualquier lugar, solicitar foco
+        rootPane.setOnMouseClicked(e -> {
+            rootPane.requestFocus();
+            System.out.println("Foco solicitado para RootPane");
+        });
+        
+        canvaPartida.setOnMouseClicked(e -> {
+            rootPane.requestFocus();
+            System.out.println("Foco solicitado para RootPane (desde Canvas)");
+        });
+    }
 
+    private void setupGameLoop() {
+        gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                handleLocalInput();
+                drawGame();
+            }
+        };
+        gameLoop.start();
+    }
 
+    private void handleLocalInput() {
+        // Mover paleta izquierda con W y S
+        if (wPressed && !sPressed) {
+            leftPaddlePosition = Math.max(0, leftPaddlePosition - paddleSpeed);
+            System.out.println("Moviendo izquierda ARRIBA: " + leftPaddlePosition);
+        }
+        if (sPressed && !wPressed) {
+            leftPaddlePosition = Math.min(1, leftPaddlePosition + paddleSpeed);
+            System.out.println("Moviendo izquierda ABAJO: " + leftPaddlePosition);
+        }
 
-    // server y mov
-    private void sendPaddleMove(double position) { // envia posiciones al server 
+        // Mover paleta derecha con FLECHAS ARRIBA y ABAJO
+        if (upPressed && !downPressed) {
+            rightPaddlePosition = Math.max(0, rightPaddlePosition - paddleSpeed);
+            System.out.println("Moviendo derecha ARRIBA: " + rightPaddlePosition);
+        }
+        if (downPressed && !upPressed) {
+            rightPaddlePosition = Math.min(1, rightPaddlePosition + paddleSpeed);
+            System.out.println("Moviendo derecha ABAJO: " + rightPaddlePosition);
+        }
+    }
+
+    private void sendPaddleMove(double position) {
         if (Main.wsClient != null) {
             JSONObject moveMsg = new JSONObject();
             moveMsg.put("type", "paddleMove");
@@ -75,27 +120,9 @@ public class GameCtrl implements Initializable {
         }
     }
 
-    private void setupGameLoop() {
-        gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                drawGame();
-                //handleLocalInput();
-            }
-        };
-        gameLoop.start();
-    }
+    private void drawGame() {
+        gcGame.clearRect(0, 0, canvaPartida.getWidth(), canvaPartida.getHeight());
 
-
-
-    
-
-    // canvas tablero 
-    private void drawGame(){
-    
-        gcGame.clearRect(0, 0, canvaPartida.getWidth(), canvaPartida.getHeight()); // limpia tablero
-
-        // fondo 
         gcGame.setFill(Color.BLACK);
         gcGame.fillRect(0, 0, canvaPartida.getWidth(), canvaPartida.getHeight());
 
@@ -104,15 +131,10 @@ public class GameCtrl implements Initializable {
         }
 
         drawCenterLine();
-
-        // palas 
         drawLeftPaddle();
         drawRightPaddle();
-
         drawBall();
-
     }
-
 
     private void drawLeftPaddle() {
         double paddleY = leftPaddlePosition * canvaPartida.getHeight();
@@ -157,30 +179,50 @@ public class GameCtrl implements Initializable {
         }
     }
 
-    // teclas boolean
+    // Estos métodos son llamados automáticamente por FXML
     public void handleKeyPressed(KeyEvent event) {
-            if (event.getCode() == KeyCode.W) {
+        
+        switch (event.getCode()) {
+            case W:
                 wPressed = true;
-            } else if (event.getCode() == KeyCode.S) {
+                break;
+            case S:
                 sPressed = true;
-            }
+                break;
+            case UP:
+                upPressed = true;
+                break;
+            case DOWN:
+                downPressed = true;
+                break;
         }
+        
+        event.consume();
+    }
     
     public void handleKeyReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.W) {
-            wPressed = false;
-        } else if (event.getCode() == KeyCode.S) {
-            sPressed = false;
+        
+        switch (event.getCode()) {
+            case W:
+                wPressed = false;
+                break;
+            case S:
+                sPressed = false;
+                break;
+            case UP:
+                upPressed = false;
+                break;
+            case DOWN:
+                downPressed = false;
+                break;
         }
+        
+        event.consume();
     }
 
-     // Método para limpiar recursos
     public void cleanup() {
         if (gameLoop != null) {
             gameLoop.stop();
         }
     }
-
-
-
 }

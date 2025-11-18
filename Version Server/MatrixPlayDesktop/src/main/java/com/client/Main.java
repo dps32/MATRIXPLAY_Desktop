@@ -179,14 +179,14 @@ public class Main extends Application {
             JSONObject msgObj = new JSONObject(response);
             String type = msgObj.optString("type","");
 
-            System.out.println("TYPEEEE" + type);
-            System.out.println("RESPUESTAAA" + response);
+            //System.out.println("TYPEEEE" + type);
+            //System.out.println("RESPUESTAAA" + response);
 
             switch (type) {
 
                 case "welcome" -> { 
-                    String message = msgObj.optString("welcome" , ""); 
-                    System.out.println(message); 
+                    String message = msgObj.optString("message" , ""); 
+                    System.out.println("Welcome: " + message); 
                 }
                 
                 case "playerAssigned" -> {
@@ -199,7 +199,10 @@ public class Main extends Application {
                 }
 
                 case "playerNames" -> {
-                    // bla bla bla pal waiting 
+                    String playerUno = msgObj.optString("player1","");
+                    String playerDos = msgObj.optString("player2","");
+                    
+                    System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
                     break;
                 }
 
@@ -210,7 +213,7 @@ public class Main extends Application {
                     break;
                 }
                 case "countdown" -> {
-                    int countdownValue = msgObj.optInt("value", 0);
+                    int countdownValue = msgObj.optInt("number", 0);
                     activeView = UtilsViews.getActiveView();
                     
                     Platform.runLater(() -> {
@@ -222,9 +225,7 @@ public class Main extends Application {
                         }
 
                         if (ctrlCount != null) {
-                            if (countdownValue > 0) {
-                                ctrlCount.setCountdownValue(String.valueOf(countdownValue));
-                            } else {
+                            if (countdownValue == 3) {
                                 ctrlCount.startCountdown();
                             }
                         }
