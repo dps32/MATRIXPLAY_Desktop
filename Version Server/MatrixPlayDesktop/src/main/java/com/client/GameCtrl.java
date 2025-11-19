@@ -230,9 +230,9 @@ public class GameCtrl implements Initializable {
         limitTop = Math.max(paddleMargin, Math.min(limitTop, canvaPartida.getHeight() - paddleHeight - paddleMargin));
         
         if (playerId == 1) {
-            gcGame.setFill(Color.YELLOW);
+            gcGame.setFill(Color.WHITESMOKE);
         } else {
-            gcGame.setFill(Color.DARKORANGE);
+            gcGame.setFill(Color.WHITESMOKE);
         }
         gcGame.fillRect(30, limitTop, paddleWidth, paddleHeight);
     }
@@ -254,9 +254,9 @@ public class GameCtrl implements Initializable {
         limitTop = Math.max(paddleMargin, Math.min(limitTop, canvaPartida.getHeight() - paddleHeight - paddleMargin));
         
         if (playerId == 2) {
-            gcGame.setFill(Color.YELLOW);
+            gcGame.setFill(Color.WHITESMOKE);
         } else {
-            gcGame.setFill(Color.DARKORANGE);
+            gcGame.setFill(Color.WHITESMOKE);
         }
         gcGame.fillRect(canvaPartida.getWidth() - 30 - paddleWidth, limitTop, paddleWidth, paddleHeight);
     }
