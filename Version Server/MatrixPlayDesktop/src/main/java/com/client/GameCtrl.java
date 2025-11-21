@@ -15,14 +15,26 @@ import javafx.scene.paint.Color;
 public class GameCtrl implements Initializable {
 
     @FXML private Canvas canvaPartida;
-    
     @FXML private BorderPane rootPane;
 
     private GraphicsContext gcGame;
     
+    // elementos partida
     private final double paddleWidth = 20;
     private final double paddleHeight = 150;
     private final double paddleMargin = 15;
+    private final double paddleSpeed = 0.003; 
+
+    private boolean upPressed = false;
+    private boolean downPressed = false;
+    
+    private final double ballRadius = 15;
+    private double ballX = 0.5;
+    private double ballY = 0.5;
+
+    private int player1Score;
+    private int player2Score;
+    private AnimationTimer gameLoop;
 
     // pos server
     private double leftPaddlePosition = 0.5;
@@ -32,30 +44,19 @@ public class GameCtrl implements Initializable {
     private double localLeftPaddlePosition = 0.5;
     private double localRightPaddlePosition = 0.5;
 
-    private final double ballRadius = 15;
-    private double ballX = 0.5;
-    private double ballY = 0.5;
+    // extras game
+    private int playerId = 0;
+    private boolean gameStarted = false;
 
-    private AnimationTimer gameLoop;
-
-    private boolean upPressed = false;
-    private boolean downPressed = false;
-
-    private final double paddleSpeed = 0.003; 
-    
     // esto ayuda a que el server no se sature
     private long lastMoveTime = 0;
     private static final long MOVE_THROTTLE_MS = 16; // 60fps
-
-    private int playerId = 0;
-    private boolean gameStarted = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gcGame = canvaPartida.getGraphicsContext2D();
         setupFocus();
 
-        // ESPERAR A QUE EL CANVAS TENGA DIMENSIONES REALES
         canvaPartida.widthProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.doubleValue() > 0) {
                 drawGame();
@@ -69,7 +70,6 @@ public class GameCtrl implements Initializable {
     }
 
     public void startGame() {
-        //System.out.println("Juego iniciado player id: " + playerId);
         gameStarted = true;
         drawGame();
         setupGameLoop();
@@ -180,6 +180,10 @@ public class GameCtrl implements Initializable {
                     localRightPaddlePosition = rightPaddlePosition;
                 }
             }
+
+            JSONObject score = gameState.getJSONObject("score");
+            player1Score = score.getInt("player1");
+            player2Score = score.getInt("player2");
             
         } catch (Exception e) {
             System.err.println("Error actualizando gameState: " + e.getMessage());
@@ -189,14 +193,9 @@ public class GameCtrl implements Initializable {
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
         System.out.println("Asignado como Jugador " + playerId);
-        
-        // if (playerId == 1) {
-        //     localLeftPaddlePosition = leftPaddlePosition; // pos del server
-        // } else if (playerId == 2) {
-        //     localRightPaddlePosition = rightPaddlePosition; // pos del server
-        // }
     }
 
+    // dibujo partida
     private void drawGame() {
         gcGame.clearRect(0, 0, canvaPartida.getWidth(), canvaPartida.getHeight());
 
@@ -207,6 +206,7 @@ public class GameCtrl implements Initializable {
             return;
         }
 
+        drawScore();
         drawCenterLine();
         drawLeftPaddle();
         drawRightPaddle();
@@ -222,11 +222,9 @@ public class GameCtrl implements Initializable {
             drawPosition = leftPaddlePosition;       
         }
         
-        // CALCULO CORREGIDO - la posición Y del centro menos la mitad de la altura
         double paddleCenterY = drawPosition * canvaPartida.getHeight();
         double limitTop = paddleCenterY - (paddleHeight / 2);
         
-        // Aplicar límites para que no se salga de la pantalla
         limitTop = Math.max(paddleMargin, Math.min(limitTop, canvaPartida.getHeight() - paddleHeight - paddleMargin));
         
         if (playerId == 1) {
@@ -246,11 +244,9 @@ public class GameCtrl implements Initializable {
             drawPosition = rightPaddlePosition;       
         }
             
-        // CALCULO CORREGIDO - la posición Y del centro menos la mitad de la altura  
         double paddleCenterY = drawPosition * canvaPartida.getHeight();
         double limitTop = paddleCenterY - (paddleHeight / 2);
 
-        // Aplicar límites para que no se salga de la pantalla
         limitTop = Math.max(paddleMargin, Math.min(limitTop, canvaPartida.getHeight() - paddleHeight - paddleMargin));
         
         if (playerId == 2) {
@@ -284,6 +280,16 @@ public class GameCtrl implements Initializable {
         }
     }
 
+    private void drawScore() {
+        gcGame.setFill(Color.WHITE);
+        gcGame.setFont(javafx.scene.text.Font.font("Arial", 30));
+        
+        gcGame.fillText(String.valueOf(player1Score), canvaPartida.getWidth() / 4, 50);
+        gcGame.fillText(String.valueOf(player2Score), 3 * canvaPartida.getWidth() / 4, 50);
+    }
+
+
+    // controlar
     public void handleKeyPressed(KeyEvent event) {
         if (!gameStarted) 
             return;

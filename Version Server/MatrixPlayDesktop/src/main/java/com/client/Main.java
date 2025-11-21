@@ -194,7 +194,7 @@ public class Main extends Application {
                     if (gameCtrl != null) {
                         gameCtrl.setPlayerId(playerId);
                     }
-                    System.out.println("Jugador ID: " + playerId);
+                    //System.out.println("Jugador ID: " + playerId);
                     idPlayerDesktop = playerId;
                 }
 
