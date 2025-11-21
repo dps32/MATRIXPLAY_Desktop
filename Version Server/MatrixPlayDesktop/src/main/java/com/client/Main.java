@@ -36,6 +36,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        
         try {
             final int windowWidth = 1200;
             final int windowHeight = 650;
@@ -127,7 +128,7 @@ public class Main extends Application {
                         confirmation.put("name", namePlayerDesktop);
                         wsClient.safeSend(confirmation.toString());
 
-                        UtilsViews.setViewAnimating("ViewCountD"); // viewWait
+                        UtilsViews.setViewAnimating("ViewCountD"); // ViewWait - ViewCountD
                         showAlert("Conexión Exitosa", "Conectado como: " + logCtrl.getUserName());
                     });
                 });
@@ -198,20 +199,17 @@ public class Main extends Application {
                     idPlayerDesktop = playerId;
                 }
 
-                case "playerNames" -> {
+                case "playerNames" -> { // revisar para vista del wait 
                     String playerUno = msgObj.optString("player1","");
                     String playerDos = msgObj.optString("player2","");
-                    
+
                     System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
+                    waitCtrl.clearNames(); 
+                    waitCtrl.receiveNamesPlayers(playerUno,playerDos);
                     break;
+                                
                 }
 
-                case "waiting" -> {
-                    //String message = msgObj.getString("message");
-                    //String origin = msgObj.getString("origin");
-                    //String destination = msgObj.getString("destination");
-                    break;
-                }
                 case "countdown" -> {
                     int countdownValue = msgObj.optInt("number", 0);
                     activeView = UtilsViews.getActiveView();

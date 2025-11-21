@@ -173,7 +173,7 @@ public class LogCtrl implements Initializable {
                     setConnectedState();
                     Main.connectToServer();
                     showAlert("Conexión Exitosa", "Conectado como: " + playerName + "\n" + "Servidor: " + url);
-                    UtilsViews.setViewAnimating("ViewGame");// ViewWait mira aqui
+                    UtilsViews.setViewAnimating("ViewWait");// ViewWait mira aqui
                     
                 
                 });
