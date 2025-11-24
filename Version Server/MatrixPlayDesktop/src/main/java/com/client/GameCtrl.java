@@ -320,6 +320,8 @@ public class GameCtrl implements Initializable {
     public void cleanup() {
         if (gameLoop != null) {
             gameLoop.stop();
+            gameLoop = null;
         }
+
     }
 }

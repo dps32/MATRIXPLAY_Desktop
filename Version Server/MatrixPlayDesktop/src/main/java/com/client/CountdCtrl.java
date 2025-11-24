@@ -12,15 +12,50 @@ import javafx.stage.Stage;
 public class CountdCtrl implements Initializable {
 
     @FXML public Label countdownNumber;
+    @FXML private Label playerUno;
+    @FXML private Label playerDos;
+
+    private String namePlayer1S, namePlayer2S;
     
     private boolean countdownInProgress = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cleanup();
         countdownNumber.setText("3");
         countdownInProgress = false;
     }
 
+     // wait jugadores
+
+    public void receiveNamesPlayers(String namePlayer1, String namePlayer2) {
+        Platform.runLater(() -> {
+            this.namePlayer1S = namePlayer1;
+            this.namePlayer2S = namePlayer2;
+            playerUno.setText(namePlayer1S != null && !namePlayer1.isEmpty() ? namePlayer1 : "?");
+            playerDos.setText(namePlayer2S != null && !namePlayer2.isEmpty() ? namePlayer2 : "?");
+        });
+    }
+
+    public void clearNames() {
+        namePlayer1S = "?";
+        namePlayer2S = "?";
+
+        playerUno.setText(namePlayer1S);
+        playerDos.setText(namePlayer2S);
+    }
+
+    public String getPlayer1Name() {
+        return playerUno.getText();
+    }
+
+    public String getPlayer2Name() {
+        return playerDos.getText();
+    }
+
+
+
+    // countdown
     public void setCountdownValue(String value) {
         if (countdownNumber != null) {
             countdownNumber.setText(value);
@@ -50,7 +85,7 @@ public class CountdCtrl implements Initializable {
                 }
             }).start();
         } else {
-            setCountdownValue("GO!");
+            setCountdownValue("VS");
             
             new Thread(() -> {
                 try {
@@ -77,9 +112,27 @@ public class CountdCtrl implements Initializable {
             }).start();
         }
     }
-    
+
     public void resetCountdown() {
-        countdownInProgress = false;
-        countdownNumber.setText("3");
+        cleanup();
     }
+    
+    public void cleanup() {
+        countdownInProgress = false;
+        namePlayer1S = null;
+        namePlayer2S = null;
+        
+        if (countdownNumber != null) {
+            countdownNumber.setText("3");
+        }
+        if (playerUno != null) {
+            playerUno.setText("?");
+        }
+        if (playerDos != null) {
+            playerDos.setText("?");
+        }
+    }
+
+   
+
 }

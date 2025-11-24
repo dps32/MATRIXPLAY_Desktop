@@ -21,6 +21,7 @@ public class Main extends Application {
     public static CtrlWait waitCtrl;
     public static CountdCtrl ctrlCount;
     public static GameCtrl gameCtrl;
+    public static WinnerCtrl winCtrl;
 
 
 
@@ -42,12 +43,14 @@ public class Main extends Application {
             UtilsViews.addView(getClass(), "ViewWait", "/assets/waitView.fxml");
             UtilsViews.addView(getClass(), "ViewCountD", "/assets/countdownView.fxml");
             UtilsViews.addView(getClass(), "ViewGame", "/assets/gameView.fxml");
+            UtilsViews.addView(getClass(), "ViewWinner", "/assets/winnerView.fxml");
 
 
             logCtrl = (LogCtrl) UtilsViews.getController("ViewLog");
             waitCtrl = (CtrlWait) UtilsViews.getController("ViewWait");
             ctrlCount = (CountdCtrl) UtilsViews.getController("ViewCountD");
             gameCtrl = (GameCtrl) UtilsViews.getController("ViewGame");
+            winCtrl = (WinnerCtrl) UtilsViews.getController("ViewWinner");
 
             
             Scene scene = new Scene(UtilsViews.parentContainer, windowWidth, windowHeight);
@@ -135,7 +138,7 @@ public class Main extends Application {
                             activeView = "";
 
                         if (!"ViewCountD".equals(activeView)) {
-                            UtilsViews.setView("ViewCountD");
+                            UtilsViews.setView("ViewWinner"); //ViewCountD
                         }
 
                         String txt = (countdownValue == 0) ? "GO!" : String.valueOf(countdownValue);
