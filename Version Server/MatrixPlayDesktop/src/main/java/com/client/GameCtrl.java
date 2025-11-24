@@ -32,9 +32,10 @@ public class GameCtrl implements Initializable {
     private double ballX = 0.5;
     private double ballY = 0.5;
 
-    private int player1Score;
-    private int player2Score;
+    public static int player1Score;
+    public static int player2Score;
     private AnimationTimer gameLoop;
+
 
     // pos server
     private double leftPaddlePosition = 0.5;

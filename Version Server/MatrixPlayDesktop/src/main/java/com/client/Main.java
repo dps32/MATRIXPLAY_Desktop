@@ -26,6 +26,7 @@ public class Main extends Application {
     public static CtrlWait waitCtrl;
     public static CountdCtrl ctrlCount;
     public static GameCtrl gameCtrl;
+    public static WinnertCtrl winCtrl;
     public static UtilsWS wsClient;
 
 
@@ -46,11 +47,13 @@ public class Main extends Application {
             UtilsViews.addView(getClass(), "ViewWait", "/assets/waitView.fxml");
             UtilsViews.addView(getClass(), "ViewCountD", "/assets/countdownView.fxml");
             UtilsViews.addView(getClass(), "ViewGame", "/assets/gameView.fxml");
+            UtilsViews.addView(getClass(), "ViewWin", "/assets/winnerView.fxml");
 
             logCtrl = (LogCtrl) UtilsViews.getController("ViewLog");
             waitCtrl = (CtrlWait) UtilsViews.getController("ViewWait");
             ctrlCount = (CountdCtrl) UtilsViews.getController("ViewCountD");
             gameCtrl = (GameCtrl) UtilsViews.getController("ViewGame");
+            winCtrl = (WinnertCtrl) UtilsViews.getController("ViewWin");
 
             Scene scene = new Scene(UtilsViews.parentContainer, windowWidth, windowHeight);
             UtilsViews.setStage(stage);

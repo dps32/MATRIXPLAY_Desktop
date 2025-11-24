@@ -11,11 +11,12 @@ import javafx.stage.Stage;
 
 public class CountdCtrl implements Initializable {
 
-    @FXML public Label countdownNumber;
+    @FXML private Label countdownNumber;
     @FXML private Label playerUno;
-    @FXML private Label playerDos;
+    @FXML Label playerDos;
 
-    private String namePlayer1S, namePlayer2S;
+    public String namePlayer1S, namePlayer2S;
+    public static String nPWinLose1 , nPWinLose2;
     
     private boolean countdownInProgress = false;
 
@@ -34,6 +35,10 @@ public class CountdCtrl implements Initializable {
             this.namePlayer2S = namePlayer2;
             playerUno.setText(namePlayer1S != null && !namePlayer1.isEmpty() ? namePlayer1 : "?");
             playerDos.setText(namePlayer2S != null && !namePlayer2.isEmpty() ? namePlayer2 : "?");
+
+            nPWinLose1 = namePlayer1S;
+            nPWinLose2 = namePlayer2S;
+
         });
     }
 
@@ -89,7 +94,7 @@ public class CountdCtrl implements Initializable {
             
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000); // 1 seg para go
+                    Thread.sleep(1000); // 1 seg para vs
                     Platform.runLater(() -> {
                         UtilsViews.setViewAnimating("ViewGame");
                         Stage stage = UtilsViews.getStage();
