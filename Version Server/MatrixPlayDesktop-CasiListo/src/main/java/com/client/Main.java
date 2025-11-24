@@ -26,6 +26,7 @@ public class Main extends Application {
     public static CtrlWait waitCtrl;
     public static CountdCtrl ctrlCount;
     public static GameCtrl gameCtrl;
+    public static WinnerCtrl winCtrl;
     public static UtilsWS wsClient;
 
 
@@ -45,11 +46,14 @@ public class Main extends Application {
             UtilsViews.addView(getClass(), "ViewWait", "/assets/waitView.fxml");
             UtilsViews.addView(getClass(), "ViewCountD", "/assets/countdownView.fxml");
             UtilsViews.addView(getClass(), "ViewGame", "/assets/gameView.fxml");
+            UtilsViews.addView(getClass(), "ViewWin", "/assets/winnerView.fxml");
 
             logCtrl = (LogCtrl) UtilsViews.getController("ViewLog");
             waitCtrl = (CtrlWait) UtilsViews.getController("ViewWait");
             ctrlCount = (CountdCtrl) UtilsViews.getController("ViewCountD");
             gameCtrl = (GameCtrl) UtilsViews.getController("ViewGame");
+            winCtrl = (WinnerCtrl) UtilsViews.getController("ViewWin");
+            
 
             Scene scene = new Scene(UtilsViews.parentContainer, windowWidth, windowHeight);
             UtilsViews.setStage(stage);
@@ -203,15 +207,15 @@ public class Main extends Application {
                     String playerDos = msgObj.optString("player2","");
                     
                     System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
+                    
+                    Platform.runLater(() -> {
+                        if (ctrlCount != null) {
+                            ctrlCount.setPlayerNames(playerUno, playerDos);
+                        }
+                    });
                     break;
                 }
 
-                case "waiting" -> {
-                    //String message = msgObj.getString("message");
-                    //String origin = msgObj.getString("origin");
-                    //String destination = msgObj.getString("destination");
-                    break;
-                }
                 case "countdown" -> {
                     int countdownValue = msgObj.optInt("number", 0);
                     activeView = UtilsViews.getActiveView();
@@ -228,6 +232,30 @@ public class Main extends Application {
                             if (countdownValue == 3) {
                                 ctrlCount.startCountdown();
                             }
+                        }
+                    });
+                    break;
+                }
+
+                case "gameOver" -> {
+                    String winnerName = msgObj.optString("winner", "");
+                    int winnerScore = msgObj.optInt("winnerScore", 0);
+                    String loserName = msgObj.optString("loser", "");
+                    int loserScore = msgObj.optInt("loserScore", 0);
+                    
+                    Platform.runLater(() -> {
+                        // Cambiar a la vista del ganador
+                        UtilsViews.setViewAnimating("WinnerView"); // Asegúrate que este sea el nombre correcto de tu vista
+                        
+                        // Obtener el controlador y pasar la información
+                        WinnerCtrl winnerCtrl = (WinnerCtrl) UtilsViews.getController("WinnerView");
+                        if (winnerCtrl != null) {
+                            winnerCtrl.setGameResult(winnerName, winnerScore, loserName, loserScore);
+                        }
+                        
+                        // Limpiar el juego actual
+                        if (gameCtrl != null) {
+                            gameCtrl.cleanup();
                         }
                     });
                     break;

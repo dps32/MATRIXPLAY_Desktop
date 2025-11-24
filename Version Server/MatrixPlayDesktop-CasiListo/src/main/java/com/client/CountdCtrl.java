@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 public class CountdCtrl implements Initializable {
 
     @FXML public Label countdownNumber;
+    @FXML public Label playerUno;
+    @FXML public Label playerDos;
     
     private boolean countdownInProgress = false;
 
@@ -19,12 +21,26 @@ public class CountdCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         countdownNumber.setText("3");
         countdownInProgress = false;
+        
+        playerUno.setText("...");
+        playerDos.setText("...");
     }
 
     public void setCountdownValue(String value) {
         if (countdownNumber != null) {
             countdownNumber.setText(value);
         }
+    }
+    
+    public void setPlayerNames(String player1Name, String player2Name) {
+        Platform.runLater(() -> {
+            if (playerUno != null) {
+                playerUno.setText(player1Name);
+            }
+            if (playerDos != null) {
+                playerDos.setText(player2Name);
+            }
+        });
     }
     
     public void startCountdown() {
