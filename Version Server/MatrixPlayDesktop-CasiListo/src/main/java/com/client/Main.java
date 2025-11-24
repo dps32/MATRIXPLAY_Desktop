@@ -26,7 +26,6 @@ public class Main extends Application {
     public static CtrlWait waitCtrl;
     public static CountdCtrl ctrlCount;
     public static GameCtrl gameCtrl;
-    public static WinnertCtrl winCtrl;
     public static UtilsWS wsClient;
 
 
@@ -37,7 +36,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        
         try {
             final int windowWidth = 1200;
             final int windowHeight = 650;
@@ -47,13 +45,11 @@ public class Main extends Application {
             UtilsViews.addView(getClass(), "ViewWait", "/assets/waitView.fxml");
             UtilsViews.addView(getClass(), "ViewCountD", "/assets/countdownView.fxml");
             UtilsViews.addView(getClass(), "ViewGame", "/assets/gameView.fxml");
-            UtilsViews.addView(getClass(), "ViewWin", "/assets/winnerView.fxml");
 
             logCtrl = (LogCtrl) UtilsViews.getController("ViewLog");
             waitCtrl = (CtrlWait) UtilsViews.getController("ViewWait");
             ctrlCount = (CountdCtrl) UtilsViews.getController("ViewCountD");
             gameCtrl = (GameCtrl) UtilsViews.getController("ViewGame");
-            winCtrl = (WinnertCtrl) UtilsViews.getController("ViewWin");
 
             Scene scene = new Scene(UtilsViews.parentContainer, windowWidth, windowHeight);
             UtilsViews.setStage(stage);
@@ -78,7 +74,6 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        resetGameState();
         if (wsClient != null) {
             wsClient.forceExit();
         }
@@ -95,7 +90,6 @@ public class Main extends Application {
             logCtrl.setConnectingState();
         });
 
-        resetGameState();
         resetWebSocket();
 
         pauseDuring(1000, () -> {
@@ -114,27 +108,26 @@ public class Main extends Application {
                         System.out.println("Error de WebSocket: " + response);
                         setErrorState();
                         showAlert("Error de Conexión", "No se pudo conectar al servidor");
-                        resetGameState(); 
+                        UtilsViews.setView("ViewLog");
                     });
                 });
 
-                wsClient.onOpen((response) -> {
+                wsClient.onOpen((response) -> { // envia data a server 
                     Platform.runLater(() -> {
                         System.out.println("Conexión WebSocket abierta");
                         setConnectedState();
-                        
-                        
                         JSONObject userInfo = new JSONObject();
                         userInfo.put("type", "userInfo");
                         userInfo.put("userName", logCtrl.getUserName().trim());
                         wsClient.safeSend(userInfo.toString());
+                    
 
                         JSONObject confirmation = new JSONObject();
                         confirmation.put("type", "clientConfirmation");
-                        confirmation.put("name", logCtrl.getUserName().trim()); 
+                        confirmation.put("name", namePlayerDesktop);
                         wsClient.safeSend(confirmation.toString());
 
-                        UtilsViews.setViewAnimating("ViewWait"); //ViewCountD 
+                        UtilsViews.setViewAnimating("ViewCountD"); // viewWait
                         showAlert("Conexión Exitosa", "Conectado como: " + logCtrl.getUserName());
                     });
                 });
@@ -143,7 +136,6 @@ public class Main extends Application {
                     Platform.runLater(() -> {
                         System.out.println("Conexión cerrada: " + response);
                         setErrorState();
-                        resetGameState(); 
                     });
                 });
 
@@ -152,7 +144,7 @@ public class Main extends Application {
                     System.out.println("Excepción: " + e.getMessage());
                     setErrorState();
                     showAlert("Error de Conexión", "Error: " + e.getMessage());
-                    resetGameState();
+                    UtilsViews.setView("ViewLog");
                 });
             }
         });
@@ -206,20 +198,20 @@ public class Main extends Application {
                     idPlayerDesktop = playerId;
                 }
 
-                case "playerNames" -> { // revisar para vista del wait 
+                case "playerNames" -> {
                     String playerUno = msgObj.optString("player1","");
                     String playerDos = msgObj.optString("player2","");
-
+                    
                     System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
-
-                    if (ctrlCount != null) {
-                            ctrlCount.receiveNamesPlayers(playerUno, playerDos);
-                        }
-
                     break;
-                                
                 }
 
+                case "waiting" -> {
+                    //String message = msgObj.getString("message");
+                    //String origin = msgObj.getString("origin");
+                    //String destination = msgObj.getString("destination");
+                    break;
+                }
                 case "countdown" -> {
                     int countdownValue = msgObj.optInt("number", 0);
                     activeView = UtilsViews.getActiveView();
@@ -250,28 +242,6 @@ public class Main extends Application {
             }
           
         });          
-    }
-
-    public static void resetGameState() {
-        Platform.runLater(() -> {
-            if (ctrlCount != null) {
-                ctrlCount.cleanup();
-            }
-            if (gameCtrl != null) {
-                gameCtrl.cleanup();
-            }
-            
-            namePlayerMobile = null;
-            namePlayerDesktop = null;
-            idPlayerDesktop = -1;
-            activeView = null;
-            
-            try {
-                UtilsViews.setView("ViewLog");
-            } catch (Exception e) {
-                System.err.println("Error al cambiar a ViewLog: " + e.getMessage());
-            }
-        });
     }
 
     private static void setConnectedState() {

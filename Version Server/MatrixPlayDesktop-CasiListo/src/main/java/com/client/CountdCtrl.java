@@ -11,56 +11,16 @@ import javafx.stage.Stage;
 
 public class CountdCtrl implements Initializable {
 
-    @FXML private Label countdownNumber;
-    @FXML private Label playerUno;
-    @FXML Label playerDos;
-
-    public String namePlayer1S, namePlayer2S;
-    public static String nPWinLose1 , nPWinLose2;
+    @FXML public Label countdownNumber;
     
     private boolean countdownInProgress = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cleanup();
         countdownNumber.setText("3");
         countdownInProgress = false;
     }
 
-     // wait jugadores
-
-    public void receiveNamesPlayers(String namePlayer1, String namePlayer2) {
-        Platform.runLater(() -> {
-            this.namePlayer1S = namePlayer1;
-            this.namePlayer2S = namePlayer2;
-            playerUno.setText(namePlayer1S != null && !namePlayer1.isEmpty() ? namePlayer1 : "?");
-            playerDos.setText(namePlayer2S != null && !namePlayer2.isEmpty() ? namePlayer2 : "?");
-
-            nPWinLose1 = namePlayer1S;
-            nPWinLose2 = namePlayer2S;
-
-        });
-    }
-
-    public void clearNames() {
-        namePlayer1S = "?";
-        namePlayer2S = "?";
-
-        playerUno.setText(namePlayer1S);
-        playerDos.setText(namePlayer2S);
-    }
-
-    public String getPlayer1Name() {
-        return playerUno.getText();
-    }
-
-    public String getPlayer2Name() {
-        return playerDos.getText();
-    }
-
-
-
-    // countdown
     public void setCountdownValue(String value) {
         if (countdownNumber != null) {
             countdownNumber.setText(value);
@@ -90,11 +50,11 @@ public class CountdCtrl implements Initializable {
                 }
             }).start();
         } else {
-            setCountdownValue("VS");
+            setCountdownValue("GO!");
             
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000); // 1 seg para vs
+                    Thread.sleep(1000); // 1 seg para go
                     Platform.runLater(() -> {
                         UtilsViews.setViewAnimating("ViewGame");
                         Stage stage = UtilsViews.getStage();
@@ -117,27 +77,9 @@ public class CountdCtrl implements Initializable {
             }).start();
         }
     }
-
-    public void resetCountdown() {
-        cleanup();
-    }
     
-    public void cleanup() {
+    public void resetCountdown() {
         countdownInProgress = false;
-        namePlayer1S = null;
-        namePlayer2S = null;
-        
-        if (countdownNumber != null) {
-            countdownNumber.setText("3");
-        }
-        if (playerUno != null) {
-            playerUno.setText("?");
-        }
-        if (playerDos != null) {
-            playerDos.setText("?");
-        }
+        countdownNumber.setText("3");
     }
-
-   
-
 }

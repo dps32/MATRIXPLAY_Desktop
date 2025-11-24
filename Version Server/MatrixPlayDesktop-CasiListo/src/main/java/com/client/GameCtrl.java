@@ -32,10 +32,9 @@ public class GameCtrl implements Initializable {
     private double ballX = 0.5;
     private double ballY = 0.5;
 
-    public static int player1Score;
-    public static int player2Score;
+    private int player1Score;
+    private int player2Score;
     private AnimationTimer gameLoop;
-
 
     // pos server
     private double leftPaddlePosition = 0.5;
@@ -321,8 +320,6 @@ public class GameCtrl implements Initializable {
     public void cleanup() {
         if (gameLoop != null) {
             gameLoop.stop();
-            gameLoop = null;
         }
-
     }
 }
