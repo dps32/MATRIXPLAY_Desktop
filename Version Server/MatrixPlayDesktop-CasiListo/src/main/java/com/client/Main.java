@@ -131,7 +131,7 @@ public class Main extends Application {
                         confirmation.put("name", namePlayerDesktop);
                         wsClient.safeSend(confirmation.toString());
 
-                        UtilsViews.setViewAnimating("ViewCountD"); // viewWait
+                        UtilsViews.setViewAnimating("ViewWait"); // viewWait
                         showAlert("Conexión Exitosa", "Conectado como: " + logCtrl.getUserName());
                     });
                 });
@@ -187,6 +187,7 @@ public class Main extends Application {
             //System.out.println("RESPUESTAAA" + response);
 
             String currentView = UtilsViews.getActiveView();
+             // SI ESTAMOS EN LA VISTA DE WINNER, IGNORAR MENSAJES DEL SERVIDOR
             if ("ViewWin".equals(currentView)) {
                 // Solo procesar mensajes críticos, ignorar gameState y otros
                 if ("gameState".equals(type) || "countdown".equals(type) || "playerNames".equals(type)) {
@@ -209,6 +210,11 @@ public class Main extends Application {
                     }
                     //System.out.println("Jugador ID: " + playerId);
                     idPlayerDesktop = playerId;
+
+                    if ("ViewWin".equals(currentView)) {
+                        System.out.println("Reconexión después de winner - yendo a ViewWait");
+                        UtilsViews.setView("ViewWait");
+                    }
                 }
 
                 case "playerNames" -> {
@@ -238,6 +244,10 @@ public class Main extends Application {
                         if (!"ViewCountD".equals(activeView)) {
                             UtilsViews.setView("ViewCountD");
                         }
+
+                        // if ("ViewWait".equals(activeView) && !"ViewCountD".equals(activeView)) {
+                        //     UtilsViews.setView("ViewCountD");
+                        // }
 
                         if (ctrlCount != null) {
                             if (countdownValue == 3) {

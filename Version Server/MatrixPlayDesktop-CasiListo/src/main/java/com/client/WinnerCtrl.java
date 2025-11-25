@@ -1,5 +1,7 @@
 package com.client;
 
+import org.json.JSONObject;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -50,29 +52,33 @@ public class WinnerCtrl {
     }
 
     private void handleAgain() {
-        // IMPORTANTE: Primero desconectar completamente antes de volver a conectar
-        if (Main.wsClient != null) {
-            Main.wsClient.forceExit();
-            Main.wsClient = null;
-        }
+        System.out.println("Solicitando nueva partida...");
         
-        // Limpiar estado del juego
+        // NO desconectar completamente - mantener la conexión WebSocket
+        // Solo limpiar el estado del juego actual
+        
         if (Main.gameCtrl != null) {
             Main.gameCtrl.cleanup();
         }
         
-        // Resetear variables de estado
+        // Resetear variables de estado del juego
         Main.idPlayerDesktop = 0;
-        Main.namePlayerDesktop = null;
-        Main.namePlayerMobile = null;
         
-        // Volver a la vista de conexión
-        UtilsViews.setView("ViewLog");
-        
-        // Resetear el estado del botón de conexión
-        if (Main.logCtrl != null) {
-            Main.logCtrl.setErrorState(); // O el estado que prefieras
+        // Enviar mensaje al servidor indicando que queremos jugar otra vez
+        if (Main.wsClient != null && Main.wsClient.isOpen()) {
+            try {
+                JSONObject newGameMsg = new JSONObject();
+                newGameMsg.put("type", "clientConfirmation");
+                newGameMsg.put("name", Main.namePlayerDesktop);
+                Main.wsClient.safeSend(newGameMsg.toString());
+                System.out.println("Enviada confirmación para nueva partida");
+            } catch (Exception e) {
+                System.err.println("Error enviando confirmación: " + e.getMessage());
+            }
         }
+        
+        // Ir a la vista de waiting para esperar nueva partida
+        UtilsViews.setView("ViewWait");
     }
 
     private void handleExit() {

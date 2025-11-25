@@ -232,15 +232,12 @@ public class GameCtrl implements Initializable {
             gameLoop.stop();
         }
 
-        // IMPORTANTE: Desconectar del WebSocket para evitar mensajes del servidor
-        if (Main.wsClient != null) {
-            // No forceExit aquí, solo dejamos de escuchar mensajes específicos
-            // El WebSocket sigue conectado pero ignoraremos ciertos mensajes
-        }
+        // NO desconectar el WebSocket - mantener la conexión activa
+        // El servidor manejará la desconexión/reconexión si es necesario
 
         // Mostrar pantalla de ganador
         Platform.runLater(() -> {
-            UtilsViews.setView("ViewWin"); // Usar setView normal en lugar de animating para mayor control
+            UtilsViews.setView("ViewWin");
             
             WinnerCtrl winnerCtrl = (WinnerCtrl) UtilsViews.getController("ViewWin");
             if (winnerCtrl != null) {

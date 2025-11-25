@@ -120,6 +120,16 @@ public class UtilsViews {
             }
         }
 
+        // if (nxtView == null) {
+        //     System.err.println("View not found: " + viewId + ", using normal setView");
+        //     setView(viewId);
+        //     return;
+        // }
+
+        if (curView.getId().equals(viewId)) {
+            return; // Do nothing if current view is the same as the next view
+        }
+
         // Set nxtView visible
         nxtView.setVisible(true);
         nxtView.setManaged(true);
