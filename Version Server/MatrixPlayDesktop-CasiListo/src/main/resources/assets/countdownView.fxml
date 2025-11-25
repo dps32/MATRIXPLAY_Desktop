@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -7,16 +8,41 @@
 
 <AnchorPane fx:id="anchor" minHeight="700.0" minWidth="1200.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.CountdCtrl">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" prefHeight="215.0" prefWidth="1208.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="485.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="playerUno" alignment="CENTER" prefHeight="119.0" prefWidth="180.0" text="Label" />
-
-            <Label fx:id="countdownNumber" alignment="CENTER" prefHeight="168.0" prefWidth="257.0" text="NUM">
+            <Label fx:id="playerUno" alignment="CENTER" prefHeight="119.0" prefWidth="180.0" text="Label">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="5.0" layoutY="214.0" prefHeight="237.0" prefWidth="464.0" style="-fx-background-color: white;">
+         <children>
+            <Canvas fx:id="canvaIzquierdoLineas" height="242.0" width="496.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="8.0" layoutY="450.0" prefHeight="250.0" prefWidth="1200.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="playerDos" alignment="CENTER" prefHeight="143.0" prefWidth="185.0" text="Label">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="732.0" layoutY="214.0" prefHeight="237.0" prefWidth="473.0" style="-fx-background-color: white;">
+         <children>
+            <Canvas fx:id="canvaDerechoLineas" height="236.0" width="473.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="479.0" layoutY="214.0" prefHeight="237.0" prefWidth="257.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="countdownNumber" alignment="CENTER" prefHeight="168.0" prefWidth="218.0" text="NUM">
                <font>
                   <Font size="64.0" />
                </font>
             </Label>
-            <Label fx:id="playerDos" alignment="CENTER" prefHeight="143.0" prefWidth="185.0" text="Label" />
          </children>
       </VBox>
    </children>
