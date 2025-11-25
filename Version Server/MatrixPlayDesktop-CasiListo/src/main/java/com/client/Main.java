@@ -238,16 +238,10 @@ public class Main extends Application {
                     activeView = UtilsViews.getActiveView();
                     
                     Platform.runLater(() -> {
-                        if (activeView == null) 
-                            activeView = "";
-
+                        // Siempre cambiar a ViewCountD cuando llegue countdown, sin importar la vista actual
                         if (!"ViewCountD".equals(activeView)) {
-                            UtilsViews.setView("ViewCountD");
+                            UtilsViews.setView("ViewCountD"); // Usar setView normal para mayor estabilidad
                         }
-
-                        // if ("ViewWait".equals(activeView) && !"ViewCountD".equals(activeView)) {
-                        //     UtilsViews.setView("ViewCountD");
-                        // }
 
                         if (ctrlCount != null) {
                             if (countdownValue == 3) {

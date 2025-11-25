@@ -105,32 +105,39 @@ public class UtilsViews {
         for (Node n : list) {
             if (n.isVisible()) {
                 curView = n;
+                break; // Encuentra la primera vista visible y sale
             }
         }
 
-        if (curView.getId().equals(viewId)) {
-            return; // Do nothing if current view is the same as the next view
+        // Si no hay vista actual, usar método normal sin animación
+        if (curView == null) {
+            System.err.println("No current view found, using normal setView for: " + viewId);
+            setView(viewId);
+            return;
         }
 
-        // Get nxtView
+        // Si la vista actual es la misma que la siguiente, no hacer nada
+        if (curView.getId().equals(viewId)) {
+            return;
+        }
+
+        // Get next view
         Node nxtView = null;
         for (Node n : list) {
             if (n.getId().equals(viewId)) {
                 nxtView = n;
+                break;
             }
         }
 
-        // if (nxtView == null) {
-        //     System.err.println("View not found: " + viewId + ", using normal setView");
-        //     setView(viewId);
-        //     return;
-        // }
-
-        if (curView.getId().equals(viewId)) {
-            return; // Do nothing if current view is the same as the next view
+        // Si no se encuentra la siguiente vista, usar método normal
+        if (nxtView == null) {
+            System.err.println("Next view not found: " + viewId + ", using normal setView");
+            setView(viewId);
+            return;
         }
 
-        // Set nxtView visible
+        // Set next view visible
         nxtView.setVisible(true);
         nxtView.setManaged(true);
 
@@ -144,7 +151,6 @@ public class UtilsViews {
         Node animatedViewRight = null;
 
         if (list.indexOf(curView) < list.indexOf(nxtView)) {
-
             // If curView is lower than nxtView, animate to the left
             xLeftStart = 0;
             xLeftEnd = -width;
@@ -155,9 +161,7 @@ public class UtilsViews {
 
             curView.translateXProperty().set(xLeftStart);
             nxtView.translateXProperty().set(xRightStart);
-
         } else { 
-
             // If curView is greater than nxtView, animate to the right
             xLeftStart = -width;
             xLeftEnd = 0;

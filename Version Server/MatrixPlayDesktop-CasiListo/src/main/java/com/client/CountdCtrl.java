@@ -72,7 +72,15 @@ public class CountdCtrl implements Initializable {
                 try {
                     Thread.sleep(1000); // 1 seg para go
                     Platform.runLater(() -> {
-                        UtilsViews.setViewAnimating("ViewGame");
+                        // Verificar que estamos en la vista correcta antes de cambiar
+                        String currentView = UtilsViews.getActiveView();
+                        if (!"ViewCountD".equals(currentView)) {
+                            System.err.println("Not in countdown view, cannot transition to game");
+                            return;
+                        }
+                        
+                        // Usar setView normal para mayor estabilidad
+                        UtilsViews.setView("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {
                             stage.setWidth(1200);
