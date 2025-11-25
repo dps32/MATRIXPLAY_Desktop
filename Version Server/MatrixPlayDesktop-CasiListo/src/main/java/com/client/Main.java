@@ -187,12 +187,10 @@ public class Main extends Application {
             //System.out.println("RESPUESTAAA" + response);
 
             String currentView = UtilsViews.getActiveView();
-             // SI ESTAMOS EN LA VISTA DE WINNER, IGNORAR MENSAJES DEL SERVIDOR
             if ("ViewWin".equals(currentView)) {
-                // Solo procesar mensajes críticos, ignorar gameState y otros
                 if ("gameState".equals(type) || "countdown".equals(type) || "playerNames".equals(type)) {
                     System.out.println("Ignorando mensaje tipo: " + type + " porque estamos en ViewWin");
-                    return; // Ignorar estos mensajes
+                    return; // ignorar estos mensajes
                 }
             }
 
@@ -222,12 +220,28 @@ public class Main extends Application {
                     String playerDos = msgObj.optString("player2","");
                     
                     System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
-                    namePlayerDesktop = playerUno;
-                    namePlayerMobile = playerDos;
+                    System.out.println("idPlayerDesktop: " + idPlayerDesktop);
+                    
+                    // Asignar nombres correctamente según el playerId
+                    if (idPlayerDesktop == 1) {
+                        namePlayerDesktop = playerUno;
+                        namePlayerMobile = playerDos;
+                    } else if (idPlayerDesktop == 2) {
+                        namePlayerDesktop = playerDos;
+                        namePlayerMobile = playerUno;
+                    }
+                    
+                    System.out.println("Asignados - Desktop: " + namePlayerDesktop + ", Mobile: " + namePlayerMobile);
                     
                     Platform.runLater(() -> {
                         if (ctrlCount != null) {
-                            ctrlCount.setPlayerNames(playerUno, playerDos);
+                            ctrlCount.setPlayerNames(playerUno, playerDos, idPlayerDesktop);
+                            
+                            // Si ya estamos en ViewCountD pero el countdown no ha empezado, iniciarlo
+                            if ("ViewCountD".equals(UtilsViews.getActiveView())) {
+                                System.out.println("Nombres asignados en countdown, iniciando countdown...");
+                                ctrlCount.startCountdown();
+                            }
                         }
                     });
                     break;
@@ -238,15 +252,19 @@ public class Main extends Application {
                     activeView = UtilsViews.getActiveView();
                     
                     Platform.runLater(() -> {
-                        // Siempre cambiar a ViewCountD cuando llegue countdown, sin importar la vista actual
                         if (!"ViewCountD".equals(activeView)) {
-                            UtilsViews.setView("ViewCountD"); // Usar setView normal para mayor estabilidad
+                            UtilsViews.setView("ViewCountD"); 
                         }
 
                         if (ctrlCount != null) {
-                            if (countdownValue == 3) {
-                                ctrlCount.startCountdown();
-                            }
+                            // Pequeña pausa para asegurar que los nombres se hayan asignado
+                            PauseTransition pause = new PauseTransition(Duration.millis(100));
+                            pause.setOnFinished(e -> {
+                                if (countdownValue == 3) {
+                                    ctrlCount.startCountdown();
+                                }
+                            });
+                            pause.play();
                         }
                     });
                     break;

@@ -32,13 +32,26 @@ public class CountdCtrl implements Initializable {
         }
     }
     
-    public void setPlayerNames(String player1Name, String player2Name) {
+    public void cleanUp(){
+        
+    }
+    public void setPlayerNames(String player1Name, String player2Name, int currentPlayerId) {
         Platform.runLater(() -> {
+            String leftPlayerName, rightPlayerName;
+            
+            if (currentPlayerId == 1) {
+                leftPlayerName = player1Name;
+                rightPlayerName = player2Name;
+            } else {
+                leftPlayerName = player2Name;
+                rightPlayerName = player1Name;
+            }
+            
             if (playerUno != null) {
-                playerUno.setText(player1Name);
+                playerUno.setText(leftPlayerName);
             }
             if (playerDos != null) {
-                playerDos.setText(player2Name);
+                playerDos.setText(rightPlayerName);
             }
         });
     }
@@ -72,7 +85,6 @@ public class CountdCtrl implements Initializable {
                 try {
                     Thread.sleep(1000); // 1 seg para go
                     Platform.runLater(() -> {
-                        // Cambiar directamente a ViewGame sin verificación
                         UtilsViews.setView("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {

@@ -9,14 +9,14 @@
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="playerUno" alignment="CENTER" prefHeight="119.0" prefWidth="180.0" text="Label" />
+            <Label fx:id="playerUno" alignment="CENTER" prefHeight="119.0" prefWidth="180.0" text="..." />
 
-            <Label fx:id="countdownNumber" alignment="CENTER" prefHeight="168.0" prefWidth="257.0" text="NUM">
+            <Label fx:id="countdownNumber" alignment="CENTER" prefHeight="168.0" prefWidth="257.0" text="3">
                <font>
                   <Font size="64.0" />
                </font>
             </Label>
-            <Label fx:id="playerDos" alignment="CENTER" prefHeight="143.0" prefWidth="185.0" text="Label" />
+            <Label fx:id="playerDos" alignment="CENTER" prefHeight="143.0" prefWidth="185.0" text="..." />
          </children>
       </VBox>
    </children>

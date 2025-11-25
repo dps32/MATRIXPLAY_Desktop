@@ -64,7 +64,7 @@ public class WinnerCtrl {
         // Resetear variables de estado del juego
         Main.idPlayerDesktop = 0;
         
-        // Enviar mensaje al servidor indicando que queremos jugar otra vez
+        // msg jugar otra vez
         if (Main.wsClient != null && Main.wsClient.isOpen()) {
             try {
                 JSONObject newGameMsg = new JSONObject();
@@ -77,12 +77,10 @@ public class WinnerCtrl {
             }
         }
         
-        // Ir a la vista de waiting para esperar nueva partida
         UtilsViews.setView("ViewWait");
     }
 
     private void handleExit() {
-        // Cerrar la aplicación completamente
         if (Main.wsClient != null) {
             Main.wsClient.forceExit();
         }
