@@ -50,20 +50,33 @@ public class WinnerCtrl {
     }
 
     private void handleAgain() {
-        // Volver a la vista de conexión para jugar otra vez
-        UtilsViews.setViewAnimating("ViewLog");
+        // IMPORTANTE: Primero desconectar completamente antes de volver a conectar
+        if (Main.wsClient != null) {
+            Main.wsClient.forceExit();
+            Main.wsClient = null;
+        }
         
-        // Limpiar estado anterior si es necesario
+        // Limpiar estado del juego
         if (Main.gameCtrl != null) {
             Main.gameCtrl.cleanup();
         }
         
-        // Reiniciar conexión WebSocket
-        Main.resetWebSocket();
+        // Resetear variables de estado
+        Main.idPlayerDesktop = 0;
+        Main.namePlayerDesktop = null;
+        Main.namePlayerMobile = null;
+        
+        // Volver a la vista de conexión
+        UtilsViews.setView("ViewLog");
+        
+        // Resetear el estado del botón de conexión
+        if (Main.logCtrl != null) {
+            Main.logCtrl.setErrorState(); // O el estado que prefieras
+        }
     }
 
     private void handleExit() {
-        // Cerrar la aplicación
+        // Cerrar la aplicación completamente
         if (Main.wsClient != null) {
             Main.wsClient.forceExit();
         }

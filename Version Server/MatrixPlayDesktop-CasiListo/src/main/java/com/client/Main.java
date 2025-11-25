@@ -186,6 +186,15 @@ public class Main extends Application {
             //System.out.println("TYPEEEE" + type);
             //System.out.println("RESPUESTAAA" + response);
 
+            String currentView = UtilsViews.getActiveView();
+            if ("ViewWin".equals(currentView)) {
+                // Solo procesar mensajes críticos, ignorar gameState y otros
+                if ("gameState".equals(type) || "countdown".equals(type) || "playerNames".equals(type)) {
+                    System.out.println("Ignorando mensaje tipo: " + type + " porque estamos en ViewWin");
+                    return; // Ignorar estos mensajes
+                }
+            }
+
             switch (type) {
 
                 case "welcome" -> { 
@@ -207,6 +216,8 @@ public class Main extends Application {
                     String playerDos = msgObj.optString("player2","");
                     
                     System.out.println("JUGADORES EN PARTIDA: " + playerUno + " " + playerDos);
+                    namePlayerDesktop = playerUno;
+                    namePlayerMobile = playerDos;
                     
                     Platform.runLater(() -> {
                         if (ctrlCount != null) {
@@ -232,30 +243,6 @@ public class Main extends Application {
                             if (countdownValue == 3) {
                                 ctrlCount.startCountdown();
                             }
-                        }
-                    });
-                    break;
-                }
-
-                case "gameOver" -> {
-                    String winnerName = msgObj.optString("winner", "");
-                    int winnerScore = msgObj.optInt("winnerScore", 0);
-                    String loserName = msgObj.optString("loser", "");
-                    int loserScore = msgObj.optInt("loserScore", 0);
-                    
-                    Platform.runLater(() -> {
-                        // Cambiar a la vista del ganador
-                        UtilsViews.setViewAnimating("WinnerView"); // Asegúrate que este sea el nombre correcto de tu vista
-                        
-                        // Obtener el controlador y pasar la información
-                        WinnerCtrl winnerCtrl = (WinnerCtrl) UtilsViews.getController("WinnerView");
-                        if (winnerCtrl != null) {
-                            winnerCtrl.setGameResult(winnerName, winnerScore, loserName, loserScore);
-                        }
-                        
-                        // Limpiar el juego actual
-                        if (gameCtrl != null) {
-                            gameCtrl.cleanup();
                         }
                     });
                     break;

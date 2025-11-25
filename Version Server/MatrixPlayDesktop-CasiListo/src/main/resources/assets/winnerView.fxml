@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.WinnertCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22.0.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.WinnerCtrl">
    <children>
       <Label alignment="CENTER" layoutX="75.0" layoutY="77.0" prefHeight="59.0" prefWidth="114.0" text="WINNER:" />
       <Label fx:id="winnerLabel" layoutX="173.0" layoutY="98.0" prefHeight="18.0" prefWidth="73.0" text="Label" />
@@ -18,7 +18,7 @@
       <Label fx:id="loserPoints" layoutX="368.0" layoutY="270.0" prefHeight="18.0" prefWidth="73.0" text="Label" />
       <Line endX="483.0" layoutX="117.0" layoutY="200.0" startX="-157.5" />
 
-      <Button fx:id="againButton" layoutX="486.0" layoutY="103.0" mnemonicParsing="false" text="AGAIN" />
+      <Button fx:id="againButton"  layoutX="486.0" layoutY="103.0" mnemonicParsing="false" text="AGAIN" />
       <Button fx:id="exitButton" layoutX="486.0" layoutY="275.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="59.0" text="EXIT" />
    </children>
 </AnchorPane>

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import org.json.JSONObject;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +36,10 @@ public class GameCtrl implements Initializable {
     private int player1Score;
     private int player2Score;
     private AnimationTimer gameLoop;
+
+    private int lastPlayer1Score = 0;
+    private int lastPlayer2Score = 0;
+    private boolean gameFinished = false;
 
     // pos server
     private double leftPaddlePosition = 0.5;
@@ -69,8 +74,13 @@ public class GameCtrl implements Initializable {
         });
     }
 
-    public void startGame() {
+      public void startGame() {
         gameStarted = true;
+        gameFinished = false;
+        player1Score = 0;
+        player2Score = 0;
+        lastPlayer1Score = 0;
+        lastPlayer2Score = 0;
         drawGame();
         setupGameLoop();
     }
@@ -181,14 +191,74 @@ public class GameCtrl implements Initializable {
                 }
             }
 
+            // puntuacion
             JSONObject score = gameState.getJSONObject("score");
             player1Score = score.getInt("player1");
             player2Score = score.getInt("player2");
+
+             if (!gameFinished && (player1Score >= 10 || player2Score >= 10)) {
+                gameFinished = true;
+                determineWinner();
+            }
+            
+            lastPlayer1Score = player1Score;
+            lastPlayer2Score = player2Score;
             
         } catch (Exception e) {
             System.err.println("Error actualizando gameState: " + e.getMessage());
         }
     }
+
+    private void determineWinner() {
+        String winnerName;
+        String loserName;
+        int winnerScore;
+        int loserScore;
+
+        if (player1Score >= 10) {
+            winnerName = getPlayerName(1);
+            loserName = getPlayerName(2);
+            winnerScore = player1Score;
+            loserScore = player2Score;
+        } else {
+            winnerName = getPlayerName(2);
+            loserName = getPlayerName(1);
+            winnerScore = player2Score;
+            loserScore = player1Score;
+        }
+
+        // Parar el game loop
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+
+        // IMPORTANTE: Desconectar del WebSocket para evitar mensajes del servidor
+        if (Main.wsClient != null) {
+            // No forceExit aquí, solo dejamos de escuchar mensajes específicos
+            // El WebSocket sigue conectado pero ignoraremos ciertos mensajes
+        }
+
+        // Mostrar pantalla de ganador
+        Platform.runLater(() -> {
+            UtilsViews.setView("ViewWin"); // Usar setView normal en lugar de animating para mayor control
+            
+            WinnerCtrl winnerCtrl = (WinnerCtrl) UtilsViews.getController("ViewWin");
+            if (winnerCtrl != null) {
+                winnerCtrl.setGameResult(winnerName, winnerScore, loserName, loserScore);
+            }
+        });
+    }
+
+    private String getPlayerName(int playerId) { // CHECA ESTO 
+        // Aquí necesitas una manera de obtener los nombres de los jugadores
+        // Puedes guardarlos cuando llegue el mensaje "playerNames" del servidor
+        if (playerId == 1) {
+            return Main.namePlayerDesktop != null ? Main.namePlayerDesktop : "Player 1";
+        } else {
+            return Main.namePlayerMobile; // O como obtengas el nombre del otro jugador
+        }
+    }
+
 
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
