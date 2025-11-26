@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor" minHeight="700.0" minWidth="1200.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.CountdCtrl">
+   <children>
+      <Label fx:id="playerUno" alignment="CENTER" layoutX="392.0" layoutY="89.0" prefHeight="92.0" prefWidth="416.0" text="P1" textFill="#ffedb3">
+         <font>
+            <Font size="64.0" />
+         </font>
+      </Label>
+      
+      <ImageView fx:id="bordeIzquierdo" fitHeight="92.0" fitWidth="410.0" layoutX="0.0" layoutY="293.0" preserveRatio="false">
+         <image>
+            <Image url="@/png/bordesCD.png" />
+         </image>
+      </ImageView>
+
+      <Label fx:id="countdownNumber" alignment="CENTER" layoutX="499.0" layoutY="253.0" prefHeight="172.0" prefWidth="202.0" text="3" textFill="#ffedb3">
+         <font>
+            <Font size="120.0" />
+         </font>
+      </Label>
+
+      <ImageView fx:id="bordeDerecho" fitHeight="92.0" fitWidth="410.0" layoutX="790.0" layoutY="293.0" preserveRatio="false">
+         <image>
+            <Image url="@/png/bordesCD.png" />
+         </image>
+      </ImageView>
+
+      <Label fx:id="playerDos" alignment="CENTER" layoutX="395.0" layoutY="515.0" prefHeight="92.0" prefWidth="410.0" text="P2" textFill="#ffedb3">
+         <font>
+            <Font size="64.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
