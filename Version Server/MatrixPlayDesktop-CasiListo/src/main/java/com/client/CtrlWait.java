@@ -25,9 +25,9 @@ public class CtrlWait implements Initializable{
             // texto
             pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 50);
             
-             if (pressStart2PTitulo != null) {
-            waitLabel.setFont(pressStart2PTitulo);
-            stars.setFont(pressStart2PTitulo);
+            if (pressStart2PTitulo != null) {
+                waitLabel.setFont(pressStart2PTitulo);
+                stars.setFont(pressStart2PTitulo);
             }
 
             //img

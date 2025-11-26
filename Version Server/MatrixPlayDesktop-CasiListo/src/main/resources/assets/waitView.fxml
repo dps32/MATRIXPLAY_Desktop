@@ -19,7 +19,7 @@
                </font>
             </Label>
             <ImageView fx:id="lineaAbajo" fitHeight="71.0" fitWidth="1209.0" layoutX="-4.0" layoutY="338.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="waitLabel" alignment="CENTER" layoutX="-4.0" layoutY="229.0" prefHeight="135.0" prefWidth="1209.0" text="WAITING PLAYERS ..." textFill="#ff8c42">
+            <Label fx:id="waitLabel" alignment="CENTER" layoutX="-4.0" layoutY="197.0" prefHeight="167.0" prefWidth="1209.0" text="WAITING PLAYERS ..." textFill="#ff8c42">
                <font>
                   <Font size="36.0" />
                </font>

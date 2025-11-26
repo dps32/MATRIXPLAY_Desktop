@@ -89,7 +89,6 @@ public class CountdCtrl implements Initializable {
                 try {
                     Thread.sleep(1000); // 1 seg para go
                     Platform.runLater(() -> {
-                        // Cambiar directamente a ViewGame sin verificación
                         UtilsViews.setView("ViewGame");
                         Stage stage = UtilsViews.getStage();
                         if (stage != null) {
