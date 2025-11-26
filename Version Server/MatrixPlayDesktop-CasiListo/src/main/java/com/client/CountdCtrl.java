@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class CountdCtrl implements Initializable {
@@ -17,8 +18,24 @@ public class CountdCtrl implements Initializable {
     
     private boolean countdownInProgress = false;
 
+    private Font pressStart2PTitulo;
+    private Font pressStart2PTexto;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        pressStart2PTexto = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 31);
+        pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 64);
+
+        if (pressStart2PTexto != null) {
+            playerUno.setFont(pressStart2PTexto);
+            playerDos.setFont(pressStart2PTexto);
+        }
+        
+        if (pressStart2PTitulo != null) {
+            countdownNumber.setFont(pressStart2PTitulo);
+        }
+
         countdownNumber.setText("3");
         countdownInProgress = false;
         

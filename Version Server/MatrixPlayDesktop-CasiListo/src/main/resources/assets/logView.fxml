@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -12,11 +13,10 @@
    <children>
       <Canvas fx:id="canvasLog" height="479.0" layoutY="222.0" width="1029.0" />
       <Canvas fx:id="canvasTitulo" height="227.0" width="1029.0" />
-      <Canvas fx:id="canvasLineaNaranja" height="700.0" layoutX="1029.0" width="178.0" />
       
-      <TextField fx:id="playerNameField" layoutX="332.0" layoutY="288.0" prefHeight="34.0" prefWidth="415.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: orange; -fx-border-width: 2;" />
+      <TextField fx:id="playerNameField" layoutX="332.0" layoutY="288.0" prefHeight="34.0" prefWidth="415.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: ff9554; -fx-border-width: 2;" />
       
-      <TextField fx:id="urlField" layoutX="332.0" layoutY="364.0" prefHeight="34.0" prefWidth="415.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: orange; -fx-border-width: 2;" />
+      <TextField fx:id="urlField" layoutX="332.0" layoutY="364.0" prefHeight="34.0" prefWidth="415.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: ff9554; -fx-border-width: 2;" />
       <Pane layoutX="338.0" layoutY="462.0" prefHeight="200.0" prefWidth="415.0">
          
          <children>
@@ -29,5 +29,7 @@
          </children>
          
       </Pane>
+      <ImageView fx:id="lineaNaranjaPixel" fitHeight="700.0" fitWidth="176.0" layoutX="1029.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="esquinaIzquierda" fitHeight="249.0" fitWidth="290.0" layoutY="451.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

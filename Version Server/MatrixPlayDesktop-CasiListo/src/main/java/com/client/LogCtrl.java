@@ -11,8 +11,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,9 +25,8 @@ public class LogCtrl implements Initializable {
     
     @FXML private Canvas canvasLog;
     @FXML private Canvas canvasTitulo;
-    @FXML private Canvas canvasLineaNaranja;
 
-    @FXML public static Label errorLabel;
+    @FXML private ImageView lineaNaranjaPixel, esquinaIzquierda;
 
     // interactivos
     @FXML private TextField playerNameField;
@@ -35,7 +35,6 @@ public class LogCtrl implements Initializable {
 
     private GraphicsContext gcCanvasLog;
     private GraphicsContext gcCanvasTitulo;
-    private GraphicsContext gcCanvasLineaNaranja;
 
     private Font pressStart2PTitulo;
     private Font pressStart2PTexto;
@@ -48,6 +47,18 @@ public class LogCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+
+            //img
+            try {
+                Image image = new Image(getClass().getResourceAsStream("/png/lineOrange.png"));
+                Image imageEsquina = new Image(getClass().getResourceAsStream("/png/esquinaLOG.png"));
+                lineaNaranjaPixel.setImage(image);
+                esquinaIzquierda.setImage(imageEsquina);
+                
+            } catch (Exception e) {
+                System.err.println("Error loading image: " + e.getMessage());
+            }
+
             // fuente
             pressStart2PTexto = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 18);
             pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 90);
@@ -61,7 +72,6 @@ public class LogCtrl implements Initializable {
             //g2d
             gcCanvasLog = canvasLog.getGraphicsContext2D();
             gcCanvasTitulo = canvasTitulo.getGraphicsContext2D();
-            gcCanvasLineaNaranja = canvasLineaNaranja.getGraphicsContext2D();
 
             loadSavedConfig(); //json config
             setupConnectButton();
@@ -75,6 +85,7 @@ public class LogCtrl implements Initializable {
     }
 
     private void setupConnectButton() {
+
         if (connectButton == null) 
             return;
 
@@ -85,8 +96,8 @@ public class LogCtrl implements Initializable {
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 14px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-radius: 5; " +
-            "-fx-border-radius: 5; " +
+            "-fx-background-radius: 10; " +
+            "-fx-border-radius: 10; " +
             "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);"
         );
         
@@ -102,8 +113,8 @@ public class LogCtrl implements Initializable {
                     "-fx-font-family: 'Press Start 2P'; " +
                     "-fx-font-size: 14px; " +
                     "-fx-font-weight: bold; " +
-                    "-fx-background-radius: 5; " +
-                    "-fx-border-radius: 5; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-border-radius: 10; " +
                     "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);"
                 );
             }
@@ -117,8 +128,8 @@ public class LogCtrl implements Initializable {
                     "-fx-font-family: 'Press Start 2P'; " +
                     "-fx-font-size: 14px; " +
                     "-fx-font-weight: bold; " +
-                    "-fx-background-radius: 5; " +
-                    "-fx-border-radius: 5; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-border-radius: 10; " +
                     "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);"
                 );
             }
@@ -174,14 +185,15 @@ public class LogCtrl implements Initializable {
     public void setConnectingState() {
         connectButton.setText("CONECTANDO...");
         connectButton.setDisable(true);
+        
         connectButton.setStyle(
             "-fx-background-color: #FF9800; " +
             "-fx-text-fill: white; " +
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 12px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-radius: 5; " +
-            "-fx-border-radius: 5;"
+            "-fx-background-radius: 10; " +
+            "-fx-border-radius: 10;"
         );
     }
 
@@ -194,8 +206,8 @@ public class LogCtrl implements Initializable {
             "-fx-font-family: 'Press Start 2P'; " +
             "-fx-font-size: 14px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-radius: 5; " +
-            "-fx-border-radius: 5;"
+            "-fx-background-radius: 10; " +
+            "-fx-border-radius: 10;"
         );
     }
 
@@ -229,13 +241,9 @@ public class LogCtrl implements Initializable {
         double widthTitle = canvasTitulo.getWidth();
         double heightTitle = canvasTitulo.getHeight();
 
-        double widthLine = canvasLineaNaranja.getWidth();
-        double heightLine = canvasLineaNaranja.getHeight();
-
         // Limpiar canvas 
         gcCanvasLog.clearRect(0, 0, widthLog, heightLog);
         gcCanvasTitulo.clearRect(0, 0, widthTitle, heightTitle);
-        gcCanvasLineaNaranja.clearRect(0, 0, widthLine, heightLine);
 
         // Fondo negro
         gcCanvasLog.setFill(Color.BLACK);
@@ -244,8 +252,6 @@ public class LogCtrl implements Initializable {
         gcCanvasTitulo.setFill(Color.BLACK);
         gcCanvasTitulo.fillRect(0, 0, widthTitle, heightTitle);
 
-        gcCanvasLineaNaranja.setFill(Color.DARKORANGE);
-        gcCanvasLineaNaranja.fillRect(0, 0, widthLine, heightLine);
         
         // tamaño letra 
         fontSize(gcCanvasTitulo,"Title");
@@ -260,7 +266,7 @@ public class LogCtrl implements Initializable {
 
         // PLAYER NAME + campo input
         gcCanvasLog.fillText("PLAYER NAME:", centerX - 420, startY - 250);
-        gcCanvasLog.setStroke(Color.ORANGE);
+        gcCanvasLog.setStroke(Color.rgb(255, 149, 84));
         gcCanvasLog.setLineWidth(32);
         
         gcCanvasLog.strokeLine(centerX - 170, startY - 260, centerX + 220, startY - 260);
@@ -274,14 +280,14 @@ public class LogCtrl implements Initializable {
     private void fontSize(GraphicsContext g2Context, String type){
         if(type.equals("Title")){
             g2Context.setFont(pressStart2PTitulo);
-            g2Context.setFill(Color.DARKORANGE);
-            g2Context.setStroke(Color.DARKORANGE);
+            g2Context.setFill(Color.rgb(255, 149, 84));
+            g2Context.setStroke(Color.rgb(255, 149, 84));
             g2Context.setLineWidth(1);
 
         } else if (type.equals("Text")){
             g2Context.setFont(pressStart2PTexto);
-            g2Context.setFill(Color.ORANGE);
-            g2Context.setStroke(Color.ORANGE);
+            g2Context.setFill(Color.rgb(255, 149, 84));
+            g2Context.setStroke(Color.rgb(255, 149, 84));
             g2Context.setLineWidth(1);
         }
     }
