@@ -1,3 +1,4 @@
+
 package com.client;
 
 import java.net.URL;
@@ -10,46 +11,39 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-public class CtrlWait implements Initializable {
 
-    @FXML private Label waitLabel;
-    @FXML private ImageView gifAdd; 
+public class CtrlWait implements Initializable{
+
+    @FXML private Label waitLabel, stars;
+    @FXML private ImageView lineaArriba, lineaAbajo; 
 
     private Font pressStart2PTitulo;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            // Cargar fuente
+            // texto
             pressStart2PTitulo = Font.loadFont(getClass().getResourceAsStream("/assets/fonts/PressStart2P-Regular.ttf"), 50);
             
-            if (pressStart2PTitulo != null) {
-                waitLabel.setFont(pressStart2PTitulo);
+             if (pressStart2PTitulo != null) {
+            waitLabel.setFont(pressStart2PTitulo);
+            stars.setFont(pressStart2PTitulo);
             }
 
-            // Cargar GIF
-            loadGif();
-            
+            //img
+             try {
+                Image image = new Image(getClass().getResourceAsStream("/png/lineWait.png"));
+                lineaArriba.setImage(image);
+                lineaAbajo.setImage(image);
+                
+            } catch (Exception e) {
+                System.err.println("Error loading image: " + e.getMessage());
+            }
+
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage()); 
-            e.printStackTrace();
         }
     }
 
-    private void loadGif() {
-        try {
-            // Cargar el GIF desde resources
-            Image gifImage = new Image(getClass().getResourceAsStream("/png/arcadeGif.gif"));
-            gifAdd.setImage(gifImage);
-            
-            // Ajustar tamaño y posición
-            gifAdd.setFitWidth(400);
-            gifAdd.setFitHeight(300);
-            gifAdd.setPreserveRatio(true);
-            
-        } catch (Exception e) {
-            System.err.println("Error cargando el GIF: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 }
